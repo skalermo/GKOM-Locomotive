@@ -8,4 +8,4 @@ Roman Moskalenko
 
 # Train photo prototype
 
-![Train](Train_photo_prototype.jpg)
+![Train](Train_photo_prototype_compressed.jpg)
