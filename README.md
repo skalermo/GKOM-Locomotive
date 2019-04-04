@@ -1,8 +1,8 @@
-﻿## Driving locomotive (jadąca lokomotywa) OpenGL
+﻿# Driving locomotive (jadąca lokomotywa) OpenGL
 
 Simple model of locomotive with surroundings and lights implemented in C++ with OpenGL (GLEW, GLFW).
 
-# Authors
+## Authors
 
 Jarosław Glegoła - [KostkaBrukowa](https://github.com/KostkaBrukowa)
 
@@ -10,7 +10,7 @@ Rafał Lewanczyk
 
 Roman Moskalenko - [skalermo](https://github.com/skalermo)
 
-# Download
+## Download
 
 Use git clone to clone the repo.
 
@@ -18,10 +18,10 @@ Use git clone to clone the repo.
 git clone git@galeranew.ii.pw.edu.pl:GKOM.19L/ZP2-Lokomotywa.git
 ```
 
-# Usage
+## Usage
 
 Just open Visual Studio solution file (gkom-gl.sln) and run it in VS.
 
-# Locomotive prototype photo
+## Locomotive prototype photo
 
 ![Train](Train_photo_prototype_compressed.jpg)
