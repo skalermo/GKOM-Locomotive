@@ -40,6 +40,6 @@ public:
 
 	virtual ~Composite() {}
 
-private:
+protected:
 	std::vector<std::unique_ptr<Object>> children;
 };
