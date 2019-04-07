@@ -1,8 +1,18 @@
 #pragma once
 
+#include <iostream>
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
+#include <vector>
 #include "Object.h"
-#include "Composite.h"
+
+/*
+For pi constant
+*/
+#define _USE_MATH_DEFINES
+#include <math.h>
+
+
 
 /*
 Number of segments which makes cylinder smooth enough
@@ -12,11 +22,18 @@ Number of segments which makes cylinder smooth enough
 /*
 Unit vector
 */
-#define DEFAULT_VECTOR glm::vec3(1.0f, 0.0f, 0.0f)
+#define UNIT_VECTOR glm::vec3(1.0f, 0.0f, 0.0f)
 
 class Cylinder : Object
 {
 private:
+
+
+	/*
+	Two planes - Top and Bottom, maybe won't be needed later if there will be another planes between them
+	*/
+	const GLuint stacks = 2;
+
 	/*
 	Arbitrary point - center of the Bottom plane
 	*/
@@ -32,24 +49,47 @@ private:
 	GLuint segments;
 
 	/*
-	Vector pointing at the opposite Top plane. Allows to rotate cylinder
+	Vector orthogonal to cylinder's planes. Allows to rotate cylinder
 	*/
-	glm::vec3 direction;
+	glm::vec3 normal;
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
+	GLuint VAO, VBO, EBO;
 
-	void generateVertices(std::vector<GLfloat> vert, GLuint segm)
+	void generateVertices()
 	{
-		//todo
+		glm::vec3 centerCoords;
+		if (normal == UNIT_VECTOR)
+		{
+			for (size_t i = 0; i < stacks; i++)
+			{
+				centerCoords = coordinates + UNIT_VECTOR * (float) (height * i / (stacks - 1));
+
+				vertices.push_back(centerCoords.x);
+				vertices.push_back(centerCoords.y);
+				vertices.push_back(centerCoords.z);
+				
+				float x = centerCoords.x, y, z;
+				for (size_t j = 0; j < segments; j++)
+				{
+					y = centerCoords.y + radius * glm::cos(j / segments * 2 * (float)M_PI);
+					z = centerCoords.y + radius * glm::sin(j / segments * 2 * (float)M_PI);
+					vertices.push_back(x);
+					vertices.push_back(y);
+					vertices.push_back(z);
+				}
+			}
+		}
+		/*
+		vertices = { 0.5f, 0.5f, 0.0f,  // Верхний правый угол
+			0.5f, -0.5f, 0.0f,  // Нижний правый угол
+			-0.5f, -0.5f, 0.0f,  // Нижний левый угол
+			-0.5f, 0.5f, 0.0f };  // Верхний левый угол*/
 	}
 
-	void generateIndices(std::vector<GLuint> ind, GLuint segm)
+	void generateIndices()
 	{
-		/*
-		Number of planes
-		*/
-		const GLuint stacks = 2;
 
 		/*
 		Adding indices for triangles in Top and Bottom planes
@@ -57,16 +97,16 @@ private:
 		GLuint centerOfPlaneIndex;
 		for (size_t i = 0; i < stacks; i++)
 		{
-			centerOfPlaneIndex = i * (segm + 1);
-			ind.push_back(centerOfPlaneIndex);
-			ind.push_back(centerOfPlaneIndex + segm);
-			ind.push_back(centerOfPlaneIndex + 1);
+			centerOfPlaneIndex = i * (segments + 1);
+			indices.push_back(centerOfPlaneIndex);
+			indices.push_back(centerOfPlaneIndex + segments);
+			indices.push_back(centerOfPlaneIndex + 1);
 
-			for (size_t j = 1; j <= segm - 1; j++)
+			for (size_t j = 1; j <= segments - 1; j++)
 			{
-				ind.push_back(centerOfPlaneIndex);
-				ind.push_back(centerOfPlaneIndex + j);
-				ind.push_back(centerOfPlaneIndex + j + 1);
+				indices.push_back(centerOfPlaneIndex);
+				indices.push_back(centerOfPlaneIndex + j);
+				indices.push_back(centerOfPlaneIndex + j + 1);
 			}
 		}
 
@@ -77,25 +117,51 @@ private:
 		GLuint centerIndexHigherPlane;
 		for (size_t i = 0; i < stacks - 1; i++)
 		{
-			centerIndexLowerPlane = i * (segm + 1);
-			centerIndexHigherPlane = (i + 1) * (segm + 1);
+			centerIndexLowerPlane = i * (segments + 1);
+			centerIndexHigherPlane = (i + 1) * (segments + 1);
 
-			ind.push_back(centerIndexLowerPlane + segm);
-			ind.push_back(centerIndexHigherPlane + segm);
-			ind.push_back(centerIndexHigherPlane + 1);
-			ind.push_back(centerIndexHigherPlane + 1);
-			ind.push_back(centerIndexLowerPlane + segm);
-			ind.push_back(centerIndexLowerPlane + 1);
-			for (size_t j = 1; j <= 2 * (segm - 1); j++)
+			indices.push_back(centerIndexLowerPlane + segments);
+			indices.push_back(centerIndexHigherPlane + segments);
+			indices.push_back(centerIndexHigherPlane + 1);
+			indices.push_back(centerIndexHigherPlane + 1);
+			indices.push_back(centerIndexLowerPlane + segments);
+			indices.push_back(centerIndexLowerPlane + 1);
+			for (size_t j = 1; j <= 2 * (segments - 1); j++)
 			{
-				ind.push_back(centerIndexLowerPlane + j);
-				ind.push_back(centerIndexHigherPlane + j);
-				ind.push_back(centerIndexHigherPlane + j + 1);
-				ind.push_back(centerIndexHigherPlane + j + 1);
-				ind.push_back(centerIndexLowerPlane + j);
-				ind.push_back(centerIndexLowerPlane + j + 1);
+				indices.push_back(centerIndexLowerPlane + j);
+				indices.push_back(centerIndexHigherPlane + j);
+				indices.push_back(centerIndexHigherPlane + j + 1);
+				indices.push_back(centerIndexHigherPlane + j + 1);
+				indices.push_back(centerIndexLowerPlane + j);
+				indices.push_back(centerIndexLowerPlane + j + 1);
 			}
 		}
+		/*
+		indices = { 0, 1, 3,   // Первый треугольник
+			1, 2, 3 };    // Второй треугольник*/
+	}
+
+	void setUpBuffers()
+	{
+		glGenVertexArrays(1, &VAO);
+		glGenBuffers(1, &VBO);
+		glGenBuffers(1, &EBO);
+		// Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+		glBindVertexArray(VAO);
+		//static_cast<void*>(&vertices)
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(vertices[0]), &vertices[0], GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices[0], GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+		glEnableVertexAttribArray(0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
+
+		glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
+
 	}
 
 	/*
@@ -106,21 +172,21 @@ private:
 		vertices.reserve(2 * (segments + 1));
 		indices.reserve(4 * segments);
 
-		generateVertices(vertices, segments);
-		generateIndices(indices, segments);
+		generateVertices();
+		generateIndices();
+		setUpBuffers();
 	}
 
 public:
 
 	Cylinder() :
-		coordinates(DEFAULT_VECTOR),
+		coordinates(UNIT_VECTOR),
 		height(10),
 		radius(5),
 		segments(DEFAULT_SEGMENTS_NUMBER),
-		direction(DEFAULT_VECTOR) 
+		normal(UNIT_VECTOR) 
 	{
-		//init();
-		//todo
+		init();
 	}
 
 	Cylinder(glm::vec3 coords, GLfloat h, GLfloat r) :
@@ -128,31 +194,57 @@ public:
 		height(h),
 		radius(r),
 		segments(DEFAULT_SEGMENTS_NUMBER),
-		direction(DEFAULT_VECTOR)
+		normal(UNIT_VECTOR)
 	{
-		//todo
+		init();
 	}
 
-	Cylinder(glm::vec3 coords, GLfloat h, GLfloat r, GLuint s, glm::vec3 dir):
+	Cylinder(glm::vec3 coords, GLfloat h, GLfloat r, GLuint s, glm::vec3 norm):
 		coordinates(coords),
 		height(h),
 		radius(r),
 		segments(s),
-		direction(dir)
+		normal(norm)
 	{
 		//todo
 	}
 
-	~Cylinder() {}
+	~Cylinder() 
+	{
+		clean();
+	}
 
 	virtual void draw()
 	{
-		//todo
+		std::cout << "Drawing cylinder" << std::endl;
+		glBindVertexArray(VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 	}
 	
 	virtual void move(glm::vec3 displacement)
 	{
 		this->coordinates += displacement;
 		//todo
+	}
+
+	void print()
+	{
+		for (size_t i = 0; i < vertices.size(); i++)
+		{
+			std::cout << i << ") " << vertices[i] << std::endl;
+		}
+		for (size_t i = 0; i < indices.size(); i++)
+		{
+			std::cout << i << ") " << indices[i] << std::endl;
+		}
+	}
+
+	void clean()
+	{
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &EBO);
 	}
 };
