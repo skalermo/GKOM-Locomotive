@@ -17,7 +17,7 @@ For pi constant
 /*
 Number of segments which makes cylinder smooth enough
 */
-#define DEFAULT_SEGMENTS_NUMBER 25
+#define DEFAULT_SEGMENTS_NUMBER 6
 
 /*
 Unit vector
@@ -70,11 +70,12 @@ private:
 				vertices.push_back(centerCoords.y);
 				vertices.push_back(centerCoords.z);
 				
-				float x = centerCoords.x, y, z;
+				float z = centerCoords.z, y, x;
 				for (size_t j = 0; j < segments; j++)
 				{
-					y = centerCoords.y + radius * glm::cos(j / segments * 2 * (float)M_PI);
-					z = centerCoords.y + radius * glm::sin(j / segments * 2 * (float)M_PI);
+
+					x = centerCoords.y + radius * glm::cos((float)j / segments * 2 * (float)M_PI);
+					y = centerCoords.y + radius * glm::sin((float)j / segments * 2 * (float)M_PI);
 					vertices.push_back(x);
 					vertices.push_back(y);
 					vertices.push_back(z);
@@ -126,7 +127,7 @@ private:
 			indices.push_back(centerIndexHigherPlane + 1);
 			indices.push_back(centerIndexLowerPlane + segments);
 			indices.push_back(centerIndexLowerPlane + 1);
-			for (size_t j = 1; j <= 2 * (segments - 1); j++)
+			for (size_t j = 1; j <= segments - 1; j++)
 			{
 				indices.push_back(centerIndexLowerPlane + j);
 				indices.push_back(centerIndexHigherPlane + j);
@@ -216,7 +217,6 @@ public:
 
 	virtual void draw()
 	{
-		std::cout << "Drawing cylinder" << std::endl;
 		glBindVertexArray(VAO);
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -231,13 +231,17 @@ public:
 
 	void print()
 	{
-		for (size_t i = 0; i < vertices.size(); i++)
+		for (size_t i = 0; i < vertices.size()/3; i++)
 		{
-			std::cout << i << ") " << vertices[i] << std::endl;
+			std::cout << 3 * i << ") " << vertices[3 * i] << "\t";
+			std::cout << 3 * i + 1 << ") " << vertices[3 * i + 1] << "\t";
+			std::cout << 3*i+2 << ") " << vertices[3 * i + 2] << std::endl;
 		}
-		for (size_t i = 0; i < indices.size(); i++)
+		for (size_t i = 0; i < indices.size() / 3; i++)
 		{
-			std::cout << i << ") " << indices[i] << std::endl;
+			std::cout << 3 * i << ") " << indices[3 * i] << "\t";
+			std::cout << 3 * i + 1 << ") " << indices[3 * i + 1] << "\t";
+			std::cout << 3 * i + 2 << ") " << indices[3 * i + 2] << std::endl;
 		}
 	}
 
