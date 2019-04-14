@@ -12,17 +12,12 @@ For pi constant
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-
+#define NULL_VECTOR glm::vec3(0.0f, 0.0f, 0.0f)
 
 /*
 Number of segments which makes cylinder smooth enough
 */
-#define DEFAULT_SEGMENTS_NUMBER 6
-
-/*
-Unit vector
-*/
-#define UNIT_VECTOR glm::vec3(1.0f, 0.0f, 0.0f)
+#define DEFAULT_SEGMENTS_NUMBER 18
 
 class Cylinder : Object
 {
@@ -30,12 +25,12 @@ private:
 
 
 	/*
-	Two planes - Top and Bottom, maybe won't be needed later if there will be another planes between them
+	Two planes - Top and Bottom, maybe will be changed later if there will be any planes between Top and Bottom
 	*/
 	const GLuint stacks = 2;
 
 	/*
-	Arbitrary point - center of the Bottom plane
+	Origin - center of the Bottom plane
 	*/
 	glm::vec3 coordinates;
 
@@ -49,51 +44,47 @@ private:
 	GLuint segments;
 
 	/*
-	Vector orthogonal to cylinder's planes. Allows to rotate cylinder
+	Rotation variables, each one for each axis to rotate around
 	*/
-	glm::vec3 normal;
+	GLfloat xRotation;
+	GLfloat yRotation;
+	GLfloat zRotation;
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
+
 	GLuint VAO, VBO, EBO;
 
 	void generateVertices()
 	{
-		glm::vec3 centerCoords;
-		if (normal == UNIT_VECTOR)
+		glm::vec3 centerCoords = NULL_VECTOR;
+		
+		for (size_t i = 0; i < stacks; i++)
 		{
-			for (size_t i = 0; i < stacks; i++)
-			{
-				centerCoords = coordinates + UNIT_VECTOR * (float) (height * i / (stacks - 1));
+			centerCoords.z = (float) (height * i / (stacks - 1));
 
-				vertices.push_back(centerCoords.x);
-				vertices.push_back(centerCoords.y);
-				vertices.push_back(centerCoords.z);
+			vertices.push_back(centerCoords.x);
+			vertices.push_back(centerCoords.y);
+			vertices.push_back(centerCoords.z);
 				
-				float z = centerCoords.z, y, x;
-				for (size_t j = 0; j < segments; j++)
-				{
+			float z = centerCoords.z, x, y;
+			for (size_t j = 0; j < segments; j++)
+			{
 
-					x = centerCoords.y + radius * glm::cos((float)j / segments * 2 * (float)M_PI);
-					y = centerCoords.y + radius * glm::sin((float)j / segments * 2 * (float)M_PI);
-					vertices.push_back(x);
-					vertices.push_back(y);
-					vertices.push_back(z);
-				}
+				x = centerCoords.x + radius * glm::cos((float)j / segments * 2 * (float)M_PI);
+				y = centerCoords.y + radius * glm::sin((float)j / segments * 2 * (float)M_PI);
+				vertices.push_back(x);
+				vertices.push_back(y);
+				vertices.push_back(z);
 			}
 		}
-		/*
-		vertices = { 0.5f, 0.5f, 0.0f,  // Верхний правый угол
-			0.5f, -0.5f, 0.0f,  // Нижний правый угол
-			-0.5f, -0.5f, 0.0f,  // Нижний левый угол
-			-0.5f, 0.5f, 0.0f };  // Верхний левый угол*/
 	}
 
 	void generateIndices()
 	{
 
 		/*
-		Adding indices for triangles in Top and Bottom planes
+		Adding indices for triangles in Top and Bottom planes (and also between them if stacks > 2)
 		*/
 		GLuint centerOfPlaneIndex;
 		for (size_t i = 0; i < stacks; i++)
@@ -137,9 +128,6 @@ private:
 				indices.push_back(centerIndexLowerPlane + j + 1);
 			}
 		}
-		/*
-		indices = { 0, 1, 3,   // Первый треугольник
-			1, 2, 3 };    // Второй треугольник*/
 	}
 
 	void setUpBuffers()
@@ -162,7 +150,7 @@ private:
 		glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 
 		glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
-
+	
 	}
 
 	/*
@@ -181,11 +169,13 @@ private:
 public:
 
 	Cylinder() :
-		coordinates(UNIT_VECTOR),
-		height(10),
-		radius(5),
+		coordinates(NULL_VECTOR),
+		height(0.5),
+		radius(0.5),
 		segments(DEFAULT_SEGMENTS_NUMBER),
-		normal(UNIT_VECTOR) 
+		xRotation(0.0f),
+		yRotation(0.0f),
+		zRotation(0.0f)
 	{
 		init();
 	}
@@ -195,30 +185,35 @@ public:
 		height(h),
 		radius(r),
 		segments(DEFAULT_SEGMENTS_NUMBER),
-		normal(UNIT_VECTOR)
+		xRotation(0.0f),
+		yRotation(0.0f),
+		zRotation(0.0f)
 	{
 		init();
 	}
 
-	Cylinder(glm::vec3 coords, GLfloat h, GLfloat r, GLuint s, glm::vec3 norm):
+	Cylinder(glm::vec3 coords, GLfloat h, GLfloat r, GLuint s, GLfloat xr, GLfloat yr, GLfloat zr):
 		coordinates(coords),
 		height(h),
 		radius(r),
 		segments(s),
-		normal(norm)
+		xRotation(xr),
+		yRotation(yr),
+		zRotation(zr)
 	{
-		//todo
+		init();
 	}
 
 	~Cylinder() 
 	{
-		clean();
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &EBO);
 	}
 
 	virtual void draw()
 	{
 		glBindVertexArray(VAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
@@ -229,26 +224,24 @@ public:
 		//todo
 	}
 
+	/*
+	Debugging xd
+	*/
 	void print()
 	{
+		std::cout << "Vertices" << std::endl;
 		for (size_t i = 0; i < vertices.size()/3; i++)
 		{
-			std::cout << 3 * i << ") " << vertices[3 * i] << "\t";
-			std::cout << 3 * i + 1 << ") " << vertices[3 * i + 1] << "\t";
-			std::cout << 3*i+2 << ") " << vertices[3 * i + 2] << std::endl;
+			std::cout << vertices[3 * i] << ' ';
+			std::cout << vertices[3 * i + 1] << ' ';
+			std::cout << vertices[3 * i + 2] << std::endl;
 		}
+		std::cout << "Indices" << std::endl;
 		for (size_t i = 0; i < indices.size() / 3; i++)
 		{
 			std::cout << 3 * i << ") " << indices[3 * i] << "\t";
 			std::cout << 3 * i + 1 << ") " << indices[3 * i + 1] << "\t";
 			std::cout << 3 * i + 2 << ") " << indices[3 * i + 2] << std::endl;
 		}
-	}
-
-	void clean()
-	{
-		glDeleteVertexArrays(1, &VAO);
-		glDeleteBuffers(1, &VBO);
-		glDeleteBuffers(1, &EBO);
 	}
 };
