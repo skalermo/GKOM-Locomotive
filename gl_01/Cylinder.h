@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include "Object.h"
+#include "ShaderProvider.h"
+#include "Shader.h"
 
 /*
 For pi constant
@@ -53,11 +55,13 @@ private:
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
 
+	std::shared_ptr<Shader> shader;
 	GLuint VAO, VBO, EBO;
+
 
 	void generateVertices()
 	{
-		glm::vec3 centerCoords = NULL_VECTOR;
+		glm::vec3 centerCoords = coordinates;
 		
 		for (size_t i = 0; i < stacks; i++)
 		{
@@ -70,7 +74,6 @@ private:
 			float z = centerCoords.z, x, y;
 			for (size_t j = 0; j < segments; j++)
 			{
-
 				x = centerCoords.x + radius * glm::cos((float)j / segments * 2 * (float)M_PI);
 				y = centerCoords.y + radius * glm::sin((float)j / segments * 2 * (float)M_PI);
 				vertices.push_back(x);
@@ -160,18 +163,28 @@ private:
 	{
 		vertices.reserve(2 * (segments + 1));
 		indices.reserve(4 * segments);
-
+		shader = ShaderProvider::instance().getShader("cylinderSh.vert", "cylinderSh.frag");
 		generateVertices();
 		generateIndices();
 		setUpBuffers();
 	}
+	
+	
 
 public:
+	// template solution, shouldnt be in pushed version
+	static std::shared_ptr<Shader> getShaderPtr()
+	{
+		return ShaderProvider::instance().getShader("cylinderSh.vert", "cylinderSh.frag");
+	}
 
+	/*
+	Default constructor with fixed parameters
+	*/
 	Cylinder() :
 		coordinates(NULL_VECTOR),
-		height(0.5),
-		radius(0.5),
+		height(1.0),
+		radius(1.0),
 		segments(DEFAULT_SEGMENTS_NUMBER),
 		xRotation(0.0f),
 		yRotation(0.0f),
@@ -180,10 +193,13 @@ public:
 		init();
 	}
 
-	Cylinder(glm::vec3 coords, GLfloat h, GLfloat r) :
-		coordinates(coords),
-		height(h),
-		radius(r),
+	/*
+	Short version constructor
+	*/
+	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius) :
+		coordinates(coordinates),
+		height(height),
+		radius(radius),
 		segments(DEFAULT_SEGMENTS_NUMBER),
 		xRotation(0.0f),
 		yRotation(0.0f),
@@ -192,14 +208,17 @@ public:
 		init();
 	}
 
-	Cylinder(glm::vec3 coords, GLfloat h, GLfloat r, GLuint s, GLfloat xr, GLfloat yr, GLfloat zr):
-		coordinates(coords),
-		height(h),
-		radius(r),
-		segments(s),
-		xRotation(xr),
-		yRotation(yr),
-		zRotation(zr)
+	/*
+	Long version constructor
+	*/
+	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius, GLuint segments, GLfloat xRotation, GLfloat yRotation, GLfloat zRotation):
+		coordinates(coordinates),
+		height(height),
+		radius(radius),
+		segments(segments),
+		xRotation(xRotation),
+		yRotation(yRotation),
+		zRotation(zRotation)
 	{
 		init();
 	}
@@ -211,8 +230,23 @@ public:
 		glDeleteBuffers(1, &EBO);
 	}
 
+
+
 	virtual void draw()
 	{
+		shader->use();
+		float radius = 10.0f;
+		float camX = sin(glfwGetTime()) * radius;
+		float camZ = cos(glfwGetTime()) * radius;
+		glm::mat4 view = glm::mat4(1.0f);;
+		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+		shader->setTransformMatrix("view", view);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, coordinates);
+		model = glm::rotate(model, glm::radians(xRotation), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(yRotation), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(zRotation), glm::vec3(0.0f, 0.0f, 1.0f));
+		shader->setTransformMatrix("model", model);
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
@@ -221,7 +255,15 @@ public:
 	virtual void move(glm::vec3 displacement)
 	{
 		this->coordinates += displacement;
-		//todo
+	}
+
+	void rotate(GLfloat xRotation, GLfloat yRotation, GLfloat zRotation)
+	{
+		// todo: Add translation move to 0,0,0 first then rotate then translation back
+		this->xRotation = xRotation;
+		this->yRotation = yRotation;
+		this->zRotation = zRotation;
+
 	}
 
 	/*
