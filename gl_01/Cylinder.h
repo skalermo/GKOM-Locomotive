@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <string>
 #include "Object.h"
 #include "ShaderProvider.h"
 #include "Shader.h"
@@ -55,6 +56,7 @@ private:
 	std::shared_ptr<Shader> shader;
 	GLuint VAO, VBO, EBO;
 	GLuint texture0;
+	const std::string texturePath;
 
 	void generateVertices()
 	{
@@ -201,7 +203,7 @@ private:
 
 		// prepare textures
 		int width, height;
-		unsigned char* image = SOIL_load_image("textures/woodBarrel.png", &width, &height, 0, SOIL_LOAD_RGB);
+		unsigned char* image = SOIL_load_image(texturePath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
 		if (image == nullptr)
 			throw std::exception("Failed to load texture file");
 
@@ -247,29 +249,30 @@ public:
 	/*
 	Default constructor with fixed parameters
 	*/
-	Cylinder() :
-		coordinates(glm::vec3(0.0f, 0.0f, 0.0f)),
-		height(1.0),
-		radius(1.0),
-		segments(DEFAULT_SEGMENTS_NUMBER),
-		xRotation(0.0f),
-		yRotation(0.0f),
-		zRotation(0.0f)
-	{
-		init();
-	}
+	//Cylinder() :
+	//	coordinates(glm::vec3(0.0f, 0.0f, 0.0f)),
+	//	height(1.0),
+	//	radius(1.0),
+	//	segments(DEFAULT_SEGMENTS_NUMBER),
+	//	xRotation(0.0f),
+	//	yRotation(0.0f),
+	//	zRotation(0.0f)
+	//{
+	//	init();
+	//}
 
 	/*
 	Short version constructor
 	*/
-	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius) :
+	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius, std::string texturePath) :
 		coordinates(coordinates),
 		height(height),
 		radius(radius),
 		segments(DEFAULT_SEGMENTS_NUMBER),
 		xRotation(0.0f),
 		yRotation(0.0f),
-		zRotation(0.0f)
+		zRotation(0.0f),
+		texturePath(texturePath)
 	{
 		init();
 	}
@@ -277,14 +280,15 @@ public:
 	/*
 	Long version constructor
 	*/
-	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius, GLuint segments, GLfloat xRotation, GLfloat yRotation, GLfloat zRotation):
+	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius, GLuint segments, GLfloat xRotation, GLfloat yRotation, GLfloat zRotation, std::string texturePath) :
 		coordinates(coordinates),
 		height(height),
 		radius(radius),
 		segments(segments),
 		xRotation(xRotation),
 		yRotation(yRotation),
-		zRotation(zRotation)
+		zRotation(zRotation),
+		texturePath(texturePath)
 	{
 		init();
 	}
@@ -301,11 +305,10 @@ public:
 	virtual void draw()
 	{
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, coordinates);
 		model = glm::rotate(model, glm::radians(this->xRotation), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(this->yRotation), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(this->zRotation), glm::vec3(0.0f, 0.0f, 1.0f));
-		
+		model = glm::translate(model, coordinates);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture0);
