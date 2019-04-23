@@ -231,7 +231,7 @@ private:
 	{
 		vertices.reserve((segments + 1) * (stacks + 2));
 		indices.reserve(6 * segments * stacks);
-		shader = ShaderProvider::instance().getShader("cylinderSh.vert", "cylinderSh.frag");
+		shader = ShaderProvider::instance().getShader("shCylinder.vert", "shCylinder.frag");
 		generateVertices();
 		generateIndices();
 		setUpBuffers();
