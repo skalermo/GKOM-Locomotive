@@ -29,12 +29,17 @@ public:
 	/**
 	 * \brief loads an image from disc and sets it to the program
 	 * \param texturePath path to the texture on the disc
-	 * \param shader shared pointer to the object shader
+	 * \param rgba if true rgba version is loaded, false -> rgb
 	 * \param textureName name of a texture that will be visible in shader
 	 * \param textureIndex index of the texture in the shader(only range (0...3) is available
 	 */
-	Texture(const std::string& texturePath, std::shared_ptr<Shader> shader, std::string textureName = "Texture0", const int textureIndex = 0)
+	Texture(const std::string& texturePath, bool rgba = false, std::string textureName = "Texture0", const int textureIndex = 0)
 		: textureIndex(textureIndex), textureName(textureName) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 		const auto image = SOIL_load_image(texturePath.c_str(), &width, &height, nullptr, SOIL_LOAD_RGB);
 		if (image == nullptr)
 			throw std::exception("Failed to load texture file");
@@ -43,11 +48,10 @@ public:
 
 		setActiveTexture();
 		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		if(rgba)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		else 
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		SOIL_free_image_data(image);
 	}
@@ -74,6 +78,6 @@ public:
 		shader->use();
 		setActiveTexture();
 		glBindTexture(GL_TEXTURE_2D, texture);
-		shader->setInt(textureName, texture);
+		shader->setInt(textureName, textureIndex);
 	}
 };
