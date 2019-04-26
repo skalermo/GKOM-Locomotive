@@ -46,11 +46,9 @@ private:
 	GLuint segments;
 
 	/*
-	Rotation variables, each one for each axis to rotate around
+	Rotation vector
 	*/
-	GLfloat xRotation;
-	GLfloat yRotation;
-	GLfloat zRotation;
+	glm::vec3 rotations;
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
@@ -227,9 +225,7 @@ public:
 		height(height),
 		radius(radius),
 		segments(DEFAULT_SEGMENTS_NUMBER),
-		xRotation(0.0f),
-		yRotation(0.0f),
-		zRotation(0.0f),
+		rotations(glm::vec3(0.0f, 0.0f, 0.0f)),
 		texturePath(texturePath)
 	{
 		init();
@@ -238,14 +234,12 @@ public:
 	/*
 	Long version constructor
 	*/
-	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius, GLuint segments, GLfloat xRotation, GLfloat yRotation, GLfloat zRotation, std::string texturePath) :
+	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius, GLuint segments, glm::vec3 rotations, std::string texturePath) :
 		coordinates(coordinates),
 		height(height),
 		radius(radius),
 		segments(segments),
-		xRotation(xRotation),
-		yRotation(yRotation),
-		zRotation(zRotation),
+		rotations(rotations),
 		texturePath(texturePath)
 	{
 		init();
@@ -263,9 +257,9 @@ public:
 	virtual void draw()
 	{
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::rotate(model, glm::radians(this->xRotation), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->yRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->zRotation), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::translate(model, coordinates);
 
 		texture.useTexture(shader);
@@ -281,11 +275,9 @@ public:
 		this->coordinates += displacement;
 	}
 
-	void rotate(GLfloat xRotation, GLfloat yRotation, GLfloat zRotation)
+	void rotate(glm::vec3 rotations)
 	{
-		this->xRotation += xRotation;
-		this->yRotation += yRotation;
-		this->zRotation += zRotation;
+		this->rotations += rotations;
 	}
 
 	/*
