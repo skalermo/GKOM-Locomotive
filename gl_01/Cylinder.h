@@ -54,6 +54,7 @@ private:
 	std::vector<GLuint> indices;
 	std::shared_ptr<Shader> shader;
 	GLuint VAO, VBO, EBO;
+	glm::mat4 model;
 	Texture texture;
 	const std::string texturePath;
 
@@ -206,6 +207,11 @@ private:
 		generateIndices();
 		setUpBuffers();
 		texture = Texture(texturePath, true);
+		model = glm::mat4(1.0f);
+		model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::translate(model, coordinates);
 	}
 	
 	
@@ -256,14 +262,7 @@ public:
 
 	virtual void draw()
 	{
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::translate(model, coordinates);
-
 		texture.useTexture(shader);
-
 		shader->setTransformMatrix("model", model);
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
@@ -273,11 +272,18 @@ public:
 	virtual void move(glm::vec3 displacement)
 	{
 		this->coordinates += displacement;
+		model = glm::translate(model, coordinates);
 	}
 
 	void rotate(glm::vec3 rotations)
 	{
 		this->rotations += rotations;
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, coordinates);
+		model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		
 	}
 
 	/*
