@@ -8,6 +8,7 @@
 #include "Object.h"
 #include "ShaderProvider.h"
 #include "Shader.h"
+#include "Texture.h"
 #include "SOIL.h"
 
 /*
@@ -55,7 +56,7 @@ private:
 	std::vector<GLuint> indices;
 	std::shared_ptr<Shader> shader;
 	GLuint VAO, VBO, EBO;
-	GLuint texture0;
+	Texture texture;
 	const std::string texturePath;
 
 	void generateVertices()
@@ -193,35 +194,6 @@ private:
 		glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 
 		glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
-	
-		// Set the texture wrapping parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT (usually basic wrapping method)
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		// Set texture filtering parameters
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		// prepare textures
-		int width, height;
-		unsigned char* image = SOIL_load_image(texturePath.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
-		if (image == nullptr)
-			throw std::exception("Failed to load texture file");
-
-		
-		glGenTextures(1, &texture0);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture0);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		// freeing unnecessary texture stuff
-		SOIL_free_image_data(image);
-		shader->use(); // don't forget to activate/use the shader before setting uniforms!
-	// either set it manually like so:
-		glUniform1i(glGetUniformLocation(shader->ID, "Texture0"), 0);
-		// or set it via the texture class
-		glBindTexture(GL_TEXTURE_2D, 0);
-
 	}
 
 	/*
@@ -235,6 +207,7 @@ private:
 		generateVertices();
 		generateIndices();
 		setUpBuffers();
+		texture = Texture(texturePath, true);
 	}
 	
 	
@@ -245,21 +218,6 @@ public:
 	{
 		return ShaderProvider::instance().getShader("shCylinder.vert", "shCylinder.frag");
 	}
-
-	/*
-	Default constructor with fixed parameters
-	*/
-	//Cylinder() :
-	//	coordinates(glm::vec3(0.0f, 0.0f, 0.0f)),
-	//	height(1.0),
-	//	radius(1.0),
-	//	segments(DEFAULT_SEGMENTS_NUMBER),
-	//	xRotation(0.0f),
-	//	yRotation(0.0f),
-	//	zRotation(0.0f)
-	//{
-	//	init();
-	//}
 
 	/*
 	Short version constructor
@@ -310,10 +268,8 @@ public:
 		model = glm::rotate(model, glm::radians(this->zRotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::translate(model, coordinates);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture0);
-		shader->use();
-		glUniform1i(glGetUniformLocation(shader->ID, "Texture0"), 0);
+		texture.useTexture(shader);
+
 		shader->setTransformMatrix("model", model);
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
