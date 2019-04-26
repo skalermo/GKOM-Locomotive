@@ -40,7 +40,7 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		const auto image = SOIL_load_image(texturePath.c_str(), &width, &height, nullptr, SOIL_LOAD_RGB);
+		const auto image = SOIL_load_image(texturePath.c_str(), &width, &height, nullptr, SOIL_LOAD_AUTO);
 		if (image == nullptr)
 			throw std::exception("Failed to load texture file");
 
