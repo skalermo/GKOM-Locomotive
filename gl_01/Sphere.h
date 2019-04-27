@@ -1,15 +1,12 @@
 #pragma once
-#define _USE_MATH_DEFINES
 
 #include <memory>
-#include <utility>
 #include <vector>
 #include <cmath>
-#include "SOIL.h"
+#include <corecrt_math_defines.h>
 #include "Object.h"
 #include "ShaderProvider.h"
 #include "Texture.h"
-#include <corecrt_math_defines.h>
 
 
 class Sphere : Object {
@@ -17,13 +14,14 @@ class Sphere : Object {
 	std::vector<float> vertices;
 	std::vector<int> indices;
 	GLuint EBO, VBO, VAO;
+
+	std::string texturePath;
 	Texture texture;
 
 	glm::vec3 coordinates = glm::vec3(0.0f);
 	glm::vec3 rotation = glm::vec3(0.0f);
-	std::string texturePath;
 
-	void initPrograme() {
+	void initProgram() {
 		glGenBuffers(1, &EBO);
 		glGenVertexArrays(1, &VAO);
 		glGenBuffers(1, &VBO);
@@ -44,75 +42,63 @@ class Sphere : Object {
 		texture = Texture(texturePath);
 	}
 
-	void generateVertices(float radius, int widthSectors, int heightSectors) {
-		float prevTexU = 0, prevTexV = 0;
-		const float widthStep = 2 * M_PI / widthSectors;
-		const float heightStep = M_PI / heightSectors;
+	void generateVertices(float radius, const int mLatitudes, const int mMeridians) {
+		for (size_t i = 0; i < mMeridians + 1; i++)
+		{
+			for (size_t j = 0; j < mLatitudes + 2; j++)
+			{
+				// texCoord in the range [(0,0), (1,1)]
+				glm::vec2 texCoords(static_cast<float>(i) / mMeridians, static_cast<float>(j) / (mLatitudes + 1));
+				const double theta = 2 * M_PI * texCoords.x;
+				const double phi = M_PI * texCoords.y - M_PI_2;
+				glm::vec3 pos;
+				pos.y = static_cast<float>(std::sinf(phi));
+				pos.x = static_cast<float>(std::cos(phi)) * std::cos(theta);
+				pos.z = static_cast<float>(std::cos(phi)) * std::sin(theta);
 
-		for (int i = 0; i <= heightSectors * 2; i++) {
-			float heightAngle = M_PI / 2 - i * heightStep;
-			auto z = radius * sinf(heightAngle);
-			auto rcos = radius * cosf(heightAngle);
-
-			for (int j = 0; j <= widthSectors; j++) {
-				float widthAngle = j * widthStep;
-				float x = rcos * cosf(widthAngle);
-				float y = rcos * sinf(widthAngle);
-
-				vertices.push_back(x);
-				vertices.push_back(y);
-				vertices.push_back(z);
-
-				auto n = glm::normalize(glm::vec3(x, y, z));
-				float textureU = 0.5 + atan2f(n.x, n.z) / (2 * M_PI);
-				float textureV = 0.5 - asinf(n.y) / M_PI;
-
-				vertices.push_back((textureU));
-				vertices.push_back((textureV));
+				vertices.push_back(pos.x);
+				vertices.push_back(pos.y);
+				vertices.push_back(pos.z);
+				vertices.push_back(texCoords.x);
+				vertices.push_back(texCoords.y);
 			}
 		}
 
-		for (int i = 0; i < heightSectors; ++i)
+		for (size_t i = 0; i < mMeridians; i++)
 		{
-			int k1 = i * (widthSectors + 1);     // beginning of current stack
-			int k2 = k1 + widthSectors + 1;      // beginning of next stack
-
-			for (int j = 0; j < widthSectors; ++j, ++k1, ++k2)
+			// Construct triangles between successive meridians
+			for (size_t j = 0; j < mLatitudes + 1; j++)
 			{
-				float a, b, c;
-				// 2 triangles per sector excluding first and last stacks
-				// k1 => k2 => k1+1
-				if (i != 0)
-				{
-					indices.push_back(k1);
-					indices.push_back(k2);
-					indices.push_back(k1 + 1);
-				}
+				indices.push_back(i * (mLatitudes + 2) + j);
+				indices.push_back(i * (mLatitudes + 2) + j + 1);
+				indices.push_back((i + 1) * (mLatitudes + 2) + j + 1);
 
-				// k1+1 => k2 => k2+1
-				if (i != (heightSectors - 1))
-				{
-					indices.push_back(k1 + 1);
-					indices.push_back(k2);
-					indices.push_back(k2 + 1);
-				}
+
+
+				indices.push_back((i + 1) * (mLatitudes + 2) + j + 1);
+				indices.push_back((i + 1) * (mLatitudes + 2) + j);
+				indices.push_back(i * (mLatitudes + 2) + j);
+
 			}
 		}
 	}
+
 public:
 	/**
 		@radius radius of a sphere
 		@widthSectors - number of lines that are vertical(goes from north pole to south pole)
 		@heightSectors - number of line that are horizontal
 	*/
-	Sphere(float radius, const std::string& texturePath, int widthSectors = 36, int heightSectors = 36)
+	Sphere(const float radius, const std::string& texturePath, int widthSectors = 36, int heightSectors = 30)
 		:Sphere(glm::vec3(0.0f), radius, texturePath) {}
 
-	Sphere(glm::vec3 coordinates, float radius, const std::string& texturePath, int widthSectors = 36, int heightSectors = 30, glm::vec3 rotation = glm::vec3(0.0f))
-		: coordinates(coordinates), rotation(rotation), texturePath(texturePath)
+	Sphere(const glm::vec3 coordinates, const float radius, const std::string& texturePath,
+		const glm::vec3& rotation = glm::vec3(0.0f),
+		const int widthSectors = 36, const int heightSectors = 30)
+		: texturePath(texturePath), coordinates(coordinates), rotation(rotation)
 	{
 		generateVertices(radius, widthSectors, heightSectors);
-		initPrograme();
+		initProgram();
 	}
 
 	~Sphere() {
@@ -127,11 +113,11 @@ public:
 
 	void draw() override {
 		auto model = glm::mat4(1.0f);
-		model = glm::translate(model, coordinates);
+
+		model = translate(model, coordinates);
 		model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
 
 		shader->use();
 		texture.useTexture(shader);
@@ -145,8 +131,7 @@ public:
 	void move(glm::vec3 displacement) override {
 		this->coordinates += displacement;
 	}
-	void rotate(const glm::vec3& rotation)
-	{
+	void rotate(const glm::vec3& rotation) {
 		this->rotation += rotation;
 	}
 
