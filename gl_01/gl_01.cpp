@@ -72,8 +72,8 @@ int main()
 
 using namespace std;
 
-const GLuint SCR_WIDTH = 800;
-const GLuint SCR_HEIGHT = 600;
+const GLuint SCR_WIDTH = 1600;
+const GLuint SCR_HEIGHT = 1200;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -136,8 +136,8 @@ int main()
 
 		std::unique_ptr<Cylinder> cylinder(new Cylinder(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, 0.5f, 18, 90.0f, 0.0f, 0.0f, "textures/woodBarrel.png"));
 		std::unique_ptr<Cylinder> cylinder1(new Cylinder(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.5f, 18, 90.0f, 0.0f, 0.0f, "textures/woodBarrel.png"));
-		std::unique_ptr<Cube> cube(new Cube(2)); 
-
+		std::unique_ptr<Cube> cube(new Cube(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), "textures/container.jpg"));
+		std::unique_ptr<Cube> cube1(new Cube(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.4f, 1.0f), "textures/container.jpg"));
 
 		// Enable depth test
 		glEnable(GL_DEPTH_TEST);
@@ -175,9 +175,10 @@ int main()
 			glm::mat4 view = camera.GetViewMatrix();
 			shader->setTransformMatrix("view", view);
 
-
+			cube->draw(); 
 			cylinder->draw();
 			cylinder1->draw(); 
+			cube1->draw(); 
 
 
 			// Swap the screen buffers
