@@ -264,7 +264,7 @@ public:
 	virtual void move(glm::vec3 displacement)
 	{
 		this->coordinates += displacement;
-		model = glm::translate(model, coordinates);
+		model = glm::translate(model, displacement);
 	}
 
 	void rotate(glm::vec3 rotations)
