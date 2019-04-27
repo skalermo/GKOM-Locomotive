@@ -217,7 +217,7 @@ private:
 	
 
 public:
-	// template solution
+
 	static std::shared_ptr<Shader> getShaderPtr()
 	{
 		return ShaderProvider::instance().getShader("shCylinder.vert", "shCylinder.frag");
@@ -227,16 +227,8 @@ public:
 	Short version constructor
 	*/
 	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius, std::string texturePath) :
-		coordinates(coordinates),
-		height(height),
-		radius(radius),
-		segments(DEFAULT_SEGMENTS_NUMBER),
-		rotations(glm::vec3(0.0f, 0.0f, 0.0f)),
-		texturePath(texturePath)
-	{
-		init();
-	}
-
+        Cylinder(coordinates, height, radius, DEFAULT_SEGMENTS_NUMBER, glm::vec3(0.0f), texturePath) {}
+        
 	/*
 	Long version constructor
 	*/
