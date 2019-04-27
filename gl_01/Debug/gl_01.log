@@ -1,2 +1,9 @@
 ﻿  gl_01.cpp
-  gl_01.vcxproj -> C:\Users\Roman\ZP2-Lokomotywa\Debug\gl_01.exe
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(153): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(233): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(234): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(246): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+  soil.lib(SOIL.obj) : znaleziono moduł .netmodule MSIL lub moduł skompilowany z opcją /GL; konsolidowanie zostanie rozpoczęte ponownie z opcją /LTCG; dodaj opcję /LTCG do wiersza polecenia konsolidacji w celu podwyższenia wydajności konsolidatora
+  Trwa generowanie kodu
+  Zako±czono generowanie kodu
+  gl_01.vcxproj -> C:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\gl_01.exe
