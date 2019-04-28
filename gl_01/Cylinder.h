@@ -22,7 +22,7 @@ Number of segments which makes cylinder smooth enough
 */
 #define DEFAULT_SEGMENTS_NUMBER 18
 
-class Cylinder : Object
+class Cylinder : public Object
 {
 private:
 
@@ -267,7 +267,7 @@ public:
 		model = glm::translate(model, displacement);
 	}
 
-	void rotate(glm::vec3 rotations)
+	void rotate(const glm::vec3& rotations)
 	{
 		this->rotations += rotations;
 		model = glm::mat4(1.0f);

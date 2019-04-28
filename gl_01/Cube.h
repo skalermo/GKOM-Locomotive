@@ -11,7 +11,7 @@
 #include "Texture.h"
 #include <math.h>
 
-class Cube : Object
+class Cube : public Object
 {
 private:
 	glm::vec3 coordinates; 

@@ -9,7 +9,7 @@
 #include "Texture.h"
 
 
-class Sphere : Object {
+class Sphere : public Object {
 	std::shared_ptr<Shader> shader = ShaderProvider::instance().getShader("shSphere.vert", "shSphere.frag");
 	std::vector<float> vertices;
 	std::vector<int> indices;
@@ -55,6 +55,8 @@ class Sphere : Object {
 				pos.y = static_cast<float>(std::sinf(phi));
 				pos.x = static_cast<float>(std::cos(phi)) * std::cos(theta);
 				pos.z = static_cast<float>(std::cos(phi)) * std::sin(theta);
+
+				pos *= radius;
 
 				vertices.push_back(pos.x);
 				vertices.push_back(pos.y);

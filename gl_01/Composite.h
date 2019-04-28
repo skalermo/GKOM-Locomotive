@@ -28,6 +28,11 @@ public:
 			child->move(displacement);
 	}
 
+	virtual void rotate(const glm::vec3& displacement) {
+		for (auto& child : children)
+			child->rotate(displacement);
+	}
+
 	void addChild(std::unique_ptr<Object>&& child) {
 		children.push_back(std::move(child));
 	}
