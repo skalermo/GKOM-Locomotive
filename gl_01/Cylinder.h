@@ -20,7 +20,7 @@ For pi constant
 /*
 Number of segments which makes cylinder smooth enough
 */
-#define DEFAULT_SEGMENTS_NUMBER 4
+#define DEFAULT_SEGMENTS_NUMBER 18
 
 class Cylinder : Object
 {
