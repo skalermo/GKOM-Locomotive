@@ -69,6 +69,7 @@ int main()
 #include "Cylinder.h"
 #include "Shader.h"
 #include "Cube.h"
+#include "Sphere.h"
 
 using namespace std;
 
@@ -133,17 +134,20 @@ int main()
 		glfwGetCursorPos(window, &lastX, &lastY);
 
 		std::shared_ptr<Shader> shader = Cylinder::getShaderPtr();
+		auto shSphere = Sphere::getShaderPtr();
+		auto shCube = Cube::getShaderPtr();
 
-		std::unique_ptr<Cylinder> cylinder(new Cylinder(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, 0.5f, 18, 90.0f, 0.0f, 0.0f, "textures/woodBarrel.png"));
-		std::unique_ptr<Cylinder> cylinder1(new Cylinder(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.5f, 18, 90.0f, 0.0f, 0.0f, "textures/woodBarrel.png"));
+		std::unique_ptr<Cylinder> cylinder(new Cylinder(glm::vec3(0.0f, 0.0f, 0.0f), 1.0f, 0.5f, 18, glm::vec3(90.0f, 0.0f, 0.0f), "textures/woodBarrel.png"));
+		std::unique_ptr<Cylinder> cylinder1(new Cylinder(glm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.5f, 18, glm::vec3(90.0f, 0.0f, 0.0f), "textures/woodBarrel.png"));
+		std::unique_ptr<Sphere> sphere(new Sphere(glm::vec3(0.0, 0.0, 0.0), 1.0f, "textures/wall.jpg"));
 		std::unique_ptr<Cube> cube(new Cube(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), "textures/container.jpg"));
-		std::unique_ptr<Cube> cube1(new Cube(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 0.4f, 1.0f), "textures/container.jpg"));
+		std::unique_ptr<Cube> cube1(new Cube(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.4f, 2.0f), "textures/container.jpg"));
+
 
 		// Enable depth test
 		glEnable(GL_DEPTH_TEST);
 		// Accept fragment if it closer to the camera than the former one
 		glDepthFunc(GL_LESS);
-
 
 		/*glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		shader->setTransformMatrix("projection", projection);*/
@@ -169,15 +173,21 @@ int main()
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-			shader->setTransformMatrix("projection", projection);
-
-			// camera/view transformation
 			glm::mat4 view = camera.GetViewMatrix();
+			shader->use();
+			shader->setTransformMatrix("projection", projection);
 			shader->setTransformMatrix("view", view);
+			shSphere->use();
+			shSphere->setTransformMatrix("projection", projection);
+			shSphere->setTransformMatrix("view", view);
+			shCube->use();
+			shCube->setTransformMatrix("projection", projection);
+			shCube->setTransformMatrix("view", view);
 
 			cube->draw(); 
 			cylinder->draw();
-			cylinder1->draw(); 
+			sphere->draw();
+			cylinder1->draw();
 			cube1->draw(); 
 
 

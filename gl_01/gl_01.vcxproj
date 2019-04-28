@@ -94,6 +94,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProvider.h" />
+    <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>

@@ -8,6 +8,7 @@
 #include "ShaderProvider.h"
 #include "Shader.h"
 #include "SOIL.h"
+#include <math.h>
 
 class Cube : Object
 {
@@ -19,33 +20,9 @@ private:
 	GLuint texture0; 
 	std::shared_ptr<Shader> shader; 
 	const std::string texturePath; 
+	std::vector <GLfloat> V;
+	std::vector <GLuint> indices; 
 
-
-	GLfloat vertices[40] = {
-		-1.0f, -1.0f, -1.0f,	0.0f, 0.0f,
-		-1.0f, -1.0f, 1.0f,		1.0f, 0.0f,
-		-1.0f, 1.0f, -1.0f,		0.0f, 1.0f, 
-		-1.0f, 1.0f, 1.0f,		1.0f, 1.0f, 
-		1.0f, -1.0f, -1.0f,		0.0f, 1.0f,
-		1.0f, -1.0f, 1.0f,		1.0f, 1.0f, 
-		1.0f, 1.0f, -1.0f,		0.0f, 0.0f, 
-		1.0f, 1.0f, 1.0,		1.0f, 0.0f
-	}; 
-
-	GLuint indices[36] = {
-		0, 1, 5,
-		0, 4, 5,
-		0, 1, 3,
-		0, 2, 3,
-		0, 4, 6,
-		0, 2, 6,
-		7, 6, 2,
-		7, 3, 2,
-		7, 5, 1,
-		7, 3, 1,
-		7, 5, 4,
-		7, 6, 4
-	};
 
 	void setUpBuffers()
 	{
@@ -56,10 +33,10 @@ private:
 		glBindVertexArray(VAO);
 		//static_cast<void*>(&vertices)
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, 40 * sizeof(vertices[0]), &vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, V.size() * sizeof(V[0]), &V[0], GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(indices[0]), &indices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices[0], GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
@@ -100,7 +77,72 @@ private:
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 	}
+	void insertVert(glm::vec3 v)
+	{
+		V.push_back(v.x);
+		V.push_back(v.y); 
+		V.push_back(v.z);
+		int gray = (((V.size() - 1) / 5 % 4) >> 1) ^ (((V.size() - 1) / 5 % 4));
+		
+		V.push_back((GLfloat)(gray >> 1));
+		V.push_back((GLfloat)(gray %2));
+	}
 
+	void generate()
+	{
+		glm::vec3 normal = glm::vec3(0, 0, 1);
+		glm::vec3 direction = glm::vec3(-1, 0, 0);
+		glm::vec3 firstPoint = glm::vec3(-1, -1, 1);
+
+		insertVert(firstPoint);
+
+		for (int i = 0; i < 3; i++)
+		{
+			firstPoint = cross(firstPoint, direction) + direction;
+			insertVert(firstPoint);
+		}
+		for (int i = 0; i < 2; i++)
+		{
+			direction = glm::cross(direction, normal);
+			for (int j = 0; j < 2; j++)
+			{
+				firstPoint = (cross(direction, firstPoint) *(float)pow(-1, i) + direction);
+				insertVert(firstPoint);
+			}
+		}
+		direction = glm::vec3(0, 0, 1);
+		firstPoint = glm::vec3(1, -1, 1);
+		for (int j = 0; j < 2; j++)
+		{
+			insertVert(glm::vec3(firstPoint.x, firstPoint.y, firstPoint.z * (GLfloat)(pow(-1, j))));
+			for (int i = 0; i < 3; i++)
+			{
+				firstPoint = cross(firstPoint, direction) + direction;
+				insertVert(glm::vec3(firstPoint.x, firstPoint.y, firstPoint.z * (GLfloat)(pow(-1, j))));
+			}
+		}
+
+
+		int a = 0, b = 1, c = 2;
+		for (int i = 0; i < 8; i++)
+		{
+			indices.push_back(a % 8);
+			indices.push_back(b % 8);
+			indices.push_back(c % 8);
+			if (i % 2) { a += 2, c += 2; }
+			else b += 2;
+		}
+
+		a = 8, b = 9, c = 10;
+		for (int i = 0; i < 4; i++)
+		{
+			indices.push_back(a);
+			indices.push_back(b);
+			indices.push_back(c);
+			if (!((i + 1) % 2)) { a += 4, c += 4; }
+			b += 2;
+		}
+	}
 
 
 public : 
@@ -112,6 +154,7 @@ public :
 		zRotation(0.0f),
 		coordinates(coordinates)
 	{
+		generate();
 		coordinates = glm::vec3(0.0f, 0.0f, 0.0f); 
 		shader = ShaderProvider::instance().getShader("shCube.vert", "shCube.frag"); 
 		setUpBuffers(); 
@@ -122,6 +165,11 @@ public :
 		glDeleteVertexArrays(1, &VAO);
 		glDeleteBuffers(1, &VBO);
 		glDeleteBuffers(1, &EBO);
+	}
+
+	static std::shared_ptr<Shader> getShaderPtr()
+	{
+		return ShaderProvider::instance().getShader("shCube.vert", "shCube.frag");
 	}
 	
 	virtual void move(glm::vec3 displacement)
@@ -147,4 +195,6 @@ public :
 		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
+
+
 };
