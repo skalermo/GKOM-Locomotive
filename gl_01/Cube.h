@@ -126,7 +126,6 @@ public :
 		coordinates(coordinates)
 	{
 		generate();
-		coordinates = glm::vec3(0.0f, 0.0f, 0.0f); 
 		shader = ShaderProvider::instance().getShader("shCube.vert", "shCube.frag"); 
 		setUpBuffers(); 
 	}
