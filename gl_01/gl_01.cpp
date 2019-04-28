@@ -185,11 +185,13 @@ int main()
 			shCube->setTransformMatrix("view", view);
 
 			cube->draw(); 
+			cube->move(glm::vec3(-0.001f, 0.0f, 0.0f)); 
 			cylinder->draw();
 			sphere->draw();
 			cylinder1->draw();
 			cube1->draw(); 
-
+			cube1->rotate(glm::vec3(0.1f, 0.1f, 0.1f));
+			sphere->move(glm::vec3(0.001f, 0.0f, 0.0f)); 
 
 			// Swap the screen buffers
 			glfwSwapBuffers(window);

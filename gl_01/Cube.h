@@ -15,7 +15,7 @@ class Cube : Object
 private:
 	glm::vec3 coordinates; 
 	glm::vec3 size; 
-	GLfloat xRotation, yRotation, zRotation; 
+	glm::vec3 rotation; 
 	GLuint VAO, VBO, EBO;
 	GLuint texture0; 
 	std::shared_ptr<Shader> shader; 
@@ -146,12 +146,10 @@ private:
 
 
 public : 
-	Cube(glm::vec3 coordinates, glm::vec3 size, std::string texturePath) :
+	Cube(glm::vec3 coordinates, glm::vec3 size, std::string texturePath, glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f)) :
 		texturePath(texturePath),
 		size(size),
-		xRotation(0.0f), 
-		yRotation(0.0f),
-		zRotation(0.0f),
+		rotation(rotation),
 		coordinates(coordinates)
 	{
 		generate();
@@ -172,18 +170,21 @@ public :
 		return ShaderProvider::instance().getShader("shCube.vert", "shCube.frag");
 	}
 	
-	virtual void move(glm::vec3 displacement)
-	{
-
+	void move(glm::vec3 displacement) override {
+		this->coordinates += displacement;
+	}
+	void rotate(const glm::vec3& rotation) {
+		this->rotation += rotation;
 	}
 
 	virtual void draw()
 	{
 		glm::mat4 model = glm::mat4(1.0f);
+		
+		model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::scale(model, size); 
-		model = glm::rotate(model, glm::radians(this->xRotation), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->yRotation), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->zRotation), glm::vec3(0.0f, 0.0f, 1.0f));
 		model = glm::translate(model, coordinates);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -192,7 +193,7 @@ public :
 		glUniform1i(glGetUniformLocation(shader->ID, "Texture0"), 0);
 		shader->setTransformMatrix("model", model);
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 	}
 
