@@ -14,10 +14,10 @@ c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(57): warning C4244: "=": kon
           ]
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(67): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(70): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(157): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(246): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(247): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(259): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(159): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(249): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(250): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(262): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
   soil.lib(SOIL.obj) : znaleziono moduł .netmodule MSIL lub moduł skompilowany z opcją /GL; konsolidowanie zostanie rozpoczęte ponownie z opcją /LTCG; dodaj opcję /LTCG do wiersza polecenia konsolidacji w celu podwyższenia wydajności konsolidatora
   Trwa generowanie kodu
   Zako±czono generowanie kodu
