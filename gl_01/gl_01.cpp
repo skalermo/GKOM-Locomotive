@@ -9,6 +9,7 @@
 #include "Cube.h"
 #include "Sphere.h"
 #include "ThreeShapes.h"
+#include "Text.h"
 
 using namespace std;
 
@@ -54,6 +55,9 @@ int main()
 			throw exception("GLEW Initialization failed");
 
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		// Set OpenGL options
+		//glEnable(GL_CULL_FACE);
+		
 		glfwMakeContextCurrent(window);
 		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 		glfwSetCursorPosCallback(window, mouse_callback);
@@ -62,6 +66,8 @@ int main()
 		// tell GLFW to capture our mouse
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		glfwGetCursorPos(window, &lastX, &lastY);
+
+		auto shText = PrepareText(SCR_WIDTH, SCR_HEIGHT);
 
 		auto shCylinder = Cylinder::getShaderPtr();
 		auto shSphere = Sphere::getShaderPtr();
@@ -88,6 +94,8 @@ int main()
 			glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+			RenderText(shText, "This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(1, 1, 1));
+			
 			auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			auto view = camera.GetViewMatrix();
 			applyViewToShaders({ shCylinder, shCube, shSphere }, projection, view);
@@ -95,6 +103,8 @@ int main()
 			threeShapes.move({ 0.001f, 0.0f, 0.0f });
 			threeShapes.rotate({ 0.1f, 0.0f, 0.0f });
 			threeShapes.draw();
+
+			
 
 			// Swap the screen buffers
 			glfwSwapBuffers(window);
