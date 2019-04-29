@@ -110,7 +110,7 @@ int main()
 			//glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			if (deltaT >= 0.25) { // If last prinf() was more than 1 sec ago
+			if (deltaT >= 0.25) { // If last prinf() was more than 0.25 sec ago
 		 // printf and reset timer
 				spf = 250 / (double)nbFrames;
 				nbFrames = 0;
