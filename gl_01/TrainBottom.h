@@ -9,18 +9,20 @@
 class Rods : public Composite
 {
 private:
-	const std::string rodTexturePath = "textures/metal.jpg";
+	const std::string rodTexturePath = "textures/rodTexture.jpg";
 	const std::string circleTexturePath = "textures/steelWheelSmall.png";
+	const std::string circle2TexturePath = "textures/rodCircleTexture.png";
+
 
 public:
 	Rods()
 	{
 		auto rodLeft = std::make_unique<Cube>(glm::vec3(3.0f, 0.0f, -0.35f - 0.01f), glm::vec3(3.2f, 0.2f, 0.1f), rodTexturePath);
 		auto rodRight = std::make_unique<Cube>(glm::vec3(3.0f, 0.0f, 4.35f + 0.01f), glm::vec3(3.2f, 0.2f, 0.1f), rodTexturePath);
-		auto leftCircleOfLeftRod = std::make_unique<Cylinder>(glm::vec3(6.0f, 0.0f, -0.55f - 0.01f), 0.3f, 0.34f, circleTexturePath);
-		auto rightCircleOfLeftRod = std::make_unique<Cylinder>(glm::vec3(0.0f, 0.0f, -0.55f - 0.01f), 0.3f, 0.34f, circleTexturePath);
-		auto leftCircleOfRightRod = std::make_unique<Cylinder>(glm::vec3(6.0f, 0.0f, 4.25f + 0.01f), 0.3f, 0.34f, circleTexturePath);
-		auto rightCircleOfRightRod = std::make_unique<Cylinder>(glm::vec3(0.0f, 0.0f, 4.25f + 0.01f), 0.3f, 0.34f, circleTexturePath);
+		auto leftCircleOfLeftRod = std::make_unique<Cylinder>(glm::vec3(6.0f, 0.0f, -0.55f - 0.01f), 0.3f, 0.34f, circle2TexturePath);
+		auto rightCircleOfLeftRod = std::make_unique<Cylinder>(glm::vec3(0.0f, 0.0f, -0.55f - 0.01f), 0.3f, 0.34f, circle2TexturePath);
+		auto leftCircleOfRightRod = std::make_unique<Cylinder>(glm::vec3(6.0f, 0.0f, 4.25f + 0.01f), 0.3f, 0.34f, circle2TexturePath);
+		auto rightCircleOfRightRod = std::make_unique<Cylinder>(glm::vec3(0.0f, 0.0f, 4.25f + 0.01f), 0.3f, 0.34f, circle2TexturePath);
 
 		addChild(std::move(rodLeft));
 		addChild(std::move(rodRight));
@@ -61,9 +63,15 @@ public:
 		auto rods = std::make_unique<Rods>();
 		rodsPtr = rods.get();
 		addChild(std::move(rods));
-		auto bottom = std::make_unique<Cube>(glm::vec3(3.0f, 0.25f, 2.0f), glm::vec3(7.0f, 0.5, 2.0f), "textures/container.jpg");
+		auto bottom = std::make_unique<Cube>(glm::vec3(3.0f, 0.25f, 2.0f), glm::vec3(7.0f, 0.5, 2.0f), "textures/steel.jpg");
 		addChild(std::move(bottom));
 	}
+
+	// override
+	/*void move(glm::vec3 displacement) {
+		for (auto& child : children)
+			child->move(displacement);
+	}*/
 };
 
 
