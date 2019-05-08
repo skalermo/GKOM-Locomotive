@@ -38,7 +38,7 @@ float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
 float angle = 0.0f;
-float pos = 0.0f;
+
 
 int main()
 {
@@ -85,7 +85,7 @@ int main()
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0;
+		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0, pos = -150.0f;
 		int nbFrames = 0;
 		float dx0 = 0.0f, dy0 = 0.0f;
 
@@ -131,8 +131,8 @@ int main()
 
 			// 0.447 - distance from wheel center to rod; it's 0.3311 * wheel_radius
 			// 150 - angle offset in degrees
-			float dx = 0.447 * cos((pos-150)/180*M_PI);
-			float dy = 0.447 * sin((pos-150)/180*M_PI);
+			float dx = 0.447 * cos(pos/180*M_PI);
+			float dy = 0.447 * sin(pos/180*M_PI);
 
 			trainBottom.draw();
 			trainBottom.wheelsPtr->rotate({0.0f, 0.0f, deltaTime * angle});
