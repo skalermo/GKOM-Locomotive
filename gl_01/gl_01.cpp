@@ -85,7 +85,7 @@ int main()
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0, pos = -150.0f;
+		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0, pos = -150.0f, speed = 0.0f;
 		int nbFrames = 0;
 		float dx0 = 0.0f, dy0 = 0.0f;
 
@@ -121,6 +121,7 @@ int main()
 			RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
+			RenderText(shText, "Train speed: " + doubleToString(speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
 
 
 
@@ -133,6 +134,8 @@ int main()
 			// 150 - angle offset in degrees
 			float dx = 0.447 * cos(pos/180*M_PI);
 			float dy = 0.447 * sin(pos/180*M_PI);
+			speed = angle / 180 * M_PI * 1.35f;
+
 
 			trainBottom.draw();
 			trainBottom.wheelsPtr->rotate({0.0f, 0.0f, deltaTime * angle});
