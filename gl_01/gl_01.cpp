@@ -12,7 +12,7 @@
 #include "Sphere.h"
 #include "ThreeShapes.h"
 #include "Text.h"
-
+#include "RailTrack.h"
 
 using namespace std;
 
@@ -80,6 +80,7 @@ int main()
 		auto shCube = Cube::getShaderPtr();
 
 		auto threeShapes = ThreeShapes();
+		auto railTrack = RailTrack();
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
@@ -127,9 +128,10 @@ int main()
 			auto view = camera.GetViewMatrix();
 			applyViewToShaders({ shCylinder, shCube, shSphere }, projection, view);
 
-			threeShapes.move({ 0.001f, 0.0f, 0.0f });
-			threeShapes.rotate({ 0.1f, 0.0f, 0.0f });
-			threeShapes.draw();
+			//threeShapes.move({ 0.001f, 0.0f, 0.0f });
+			threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
+			//threeShapes.draw();
+			railTrack.draw(); 
 
 
 

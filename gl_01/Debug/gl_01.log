@@ -1,25 +1,50 @@
 ﻿  gl_01.cpp
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\sphere.h(46): warning C4018: '<': signed/unsigned mismatch
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\sphere.h(48): warning C4018: '<': signed/unsigned mismatch
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\sphere.h(55): warning C4244: 'argument': conversion from 'const double' to 'float', possible loss of data
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\sphere.h(56): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(46): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(48): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(55): warning C4244: "argument": konwersja z "const double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(56): warning C4244: "=": konwersja z "double" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\sphere.h(57): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(57): warning C4244: "=": konwersja z "double" do "T", możliwa utrata danych
           with
           [
               T=float
           ]
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\sphere.h(69): warning C4018: '<': signed/unsigned mismatch
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\sphere.h(72): warning C4018: '<': signed/unsigned mismatch
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\composite.h(41): warning C4018: '<=': signed/unsigned mismatch
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\gl_01.cpp(79): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\gl_01.cpp(158): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\gl_01.cpp(159): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\jarek\desktop\zp2-lokomotywa\gl_01\gl_01.cpp(171): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  soil.lib(SOIL.obj) : MSIL .netmodule or module compiled with /GL found; restarting link with /LTCG; add /LTCG to the link command line to improve linker performance
-  Generating code
-  Finished generating code
-  gl_01.vcxproj -> C:\Users\Jarek\Desktop\ZP2-Lokomotywa\Debug\gl_01.exe
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(69): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(72): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\composite.h(41): warning C4018: "<=": niezgodność typu ze znakiem/bez znaku
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\text.h(101): warning C4838: konwersja z „FT_Pos” do „GLuint” wymaga konwersji zawężającej
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(88): warning C4244: "=": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(95): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(197): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(198): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(210): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+  soil.lib(SOIL.obj) : znaleziono moduł .netmodule MSIL lub moduł skompilowany z opcją /GL; konsolidowanie zostanie rozpoczęte ponownie z opcją /LTCG; dodaj opcję /LTCG do wiersza polecenia konsolidacji w celu podwyższenia wydajności konsolidatora
+  Trwa generowanie kodu
+  Zako±czono generowanie kodu
+freetype28d.lib(autofit.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(autofit.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(bdf.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(bdf.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(cff.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(cff.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(ftbase.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(ftbase.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(ftbitmap.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(ftbitmap.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(ftdebug.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(ftdebug.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(ftgzip.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(ftgzip.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(ftinit.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(ftinit.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(ftlzw.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(ftlzw.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(ftsystem.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(ftsystem.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(smooth.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(smooth.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(pcf.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(pcf.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(pfr.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(pfr.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(psaux.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(psaux.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(pshinter.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(pshinter.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(psmodule.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(psmodule.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(raster.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(raster.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(sfnt.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(sfnt.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(truetype.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(truetype.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(type1.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(type1.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(type1cid.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(type1cid.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(type42.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(type42.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+freetype28d.lib(winfnt.obj) : warning LNK4099: nie znaleziono pliku PDB äfreetype28d.pdbö z elementem äfreetype28d.lib(winfnt.obj)ö lub w pozycji äC:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\freetype28d.pdbö; obiekt zostanie skonsolidowany bez informacji debugowania
+  gl_01.vcxproj -> C:\Users\rafal\opengl\ZP2-Lokomotywa\Debug\gl_01.exe
