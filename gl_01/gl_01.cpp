@@ -12,6 +12,7 @@
 #include "Sphere.h"
 #include "ThreeShapes.h"
 #include "Text.h"
+#include "Skybox.h"
 
 
 using namespace std;
@@ -78,7 +79,7 @@ int main()
 		auto shCylinder = Cylinder::getShaderPtr();
 		auto shSphere = Sphere::getShaderPtr();
 		auto shCube = Cube::getShaderPtr();
-
+		auto skybox = Skybox();
 		auto threeShapes = ThreeShapes();
 
 		glEnable(GL_DEPTH_TEST);
@@ -110,19 +111,6 @@ int main()
 			//glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			if (deltaT >= 0.25) { // If last prinf() was more than 0.25 sec ago
-		 // printf and reset timer
-				spf = 250 / (double)nbFrames;
-				nbFrames = 0;
-				lastTime += 0.25f;
-			}
-
-			RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
-
-
-
 			auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			auto view = camera.GetViewMatrix();
 			applyViewToShaders({ shCylinder, shCube, shSphere }, projection, view);
@@ -131,7 +119,16 @@ int main()
 			threeShapes.rotate({ 0.1f, 0.0f, 0.0f });
 			threeShapes.draw();
 
+			skybox.draw(projection, view);
 
+			if (deltaT >= 0.25) {
+				spf = 250 / (double)nbFrames;
+				nbFrames = 0;
+				lastTime += 0.25f;
+			}
+			RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
+			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
+			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
 
 			// Swap the screen buffers
 			glfwSwapBuffers(window);
