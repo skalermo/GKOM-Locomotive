@@ -79,8 +79,8 @@ int main()
 		auto shSphere = Sphere::getShaderPtr();
 		auto shCube = Cube::getShaderPtr();
 
-		auto threeShapes = ThreeShapes();
-		auto railTrack = RailTrack();
+		auto threeShapes = ThreeShapes();;
+		auto railTrack = RailTrack(100 ,0.6f);
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
@@ -131,8 +131,8 @@ int main()
 			//threeShapes.move({ 0.001f, 0.0f, 0.0f });
 			threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
 			//threeShapes.draw();
-			railTrack.draw(); 
 
+			railTrack.draw(); 
 
 
 			// Swap the screen buffers
