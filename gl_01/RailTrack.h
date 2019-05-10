@@ -22,12 +22,5 @@ public:
 			addChild(std::move(wood[i]));
 		}
 			
-		
-		
-		//= std::make_unique<Cube>
-		//auto rail2 = 		//auto wood = 
-		//addChild(std::move(rail1)); 
-		//addChild(std::move(rail2));
-		//addChild(std::move(wood)); 
 	}
 };

@@ -129,7 +129,7 @@ int main()
 			applyViewToShaders({ shCylinder, shCube, shSphere }, projection, view);
 
 			//threeShapes.move({ 0.001f, 0.0f, 0.0f });
-			threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
+			//threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
 			//threeShapes.draw();
 
 			railTrack.draw(); 
