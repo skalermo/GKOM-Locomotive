@@ -13,14 +13,17 @@
 #include "ThreeShapes.h"
 #include "TrainBottom.h"
 #include "Text.h"
+#include "RailTrack.h"
+#include "Skybox.h"
+
 
 
 using namespace std;
 
 typedef std::vector<std::shared_ptr<Shader>>  ShaderVector;
 
-const GLuint SCR_WIDTH = 1600;
-const GLuint SCR_HEIGHT = 1000;
+GLuint SCR_WIDTH;
+GLuint SCR_HEIGHT;
 
 void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const glm::mat4& view);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -52,7 +55,9 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	try
 	{
-		GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GKOM - OpenGL 01", nullptr, nullptr);
+		SCR_WIDTH = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+		SCR_HEIGHT = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+		GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GKOM - OpenGL 01", glfwGetPrimaryMonitor(), nullptr);
 		if (window == nullptr)
 			throw exception("GLFW window not created");
 		glfwMakeContextCurrent(window);
@@ -79,15 +84,17 @@ int main()
 		auto shCylinder = Cylinder::getShaderPtr();
 		auto shSphere = Sphere::getShaderPtr();
 		auto shCube = Cube::getShaderPtr();
+		
+		auto railTrack = RailTrack(100 ,0.6f);
+		auto skybox = Skybox();
 
-		auto trainBottom = TrainBottom();
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0, pos = -150.0f, speed = 0.0f;
+		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0, speed = 0.0f;
 		int nbFrames = 0;
-		float dx0 = 0.0f, dy0 = 0.0f;
+
 
 		// main loop
 		while (!glfwWindowShouldClose(window))
@@ -111,41 +118,26 @@ int main()
 			//glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			if (deltaT >= 0.25) { // If last prinf() was more than 1 sec ago
-		 // printf and reset timer
-				spf = 250 / (double)nbFrames;
-				nbFrames = 0;
-				lastTime += 0.25f;
-			}
-
-			RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "Train speed: " + doubleToString(speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
-
-
-
 			auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			auto view = camera.GetViewMatrix();
 
 			applyViewToShaders({ shCylinder, shCube, shSphere }, projection, view);
+			//threeShapes.move({ 0.001f, 0.0f, 0.0f });
+			//threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
+			//threeShapes.draw();
 
-			// 0.447 - distance from wheel center to rod; it's 0.3311 * wheel_radius
-			// 150 - angle offset in degrees
-			float dx = 0.447 * cos(pos/180*M_PI);
-			float dy = 0.447 * sin(pos/180*M_PI);
-			speed = angle / 180 * M_PI * 1.35f;
-
-
-			trainBottom.draw();
-			trainBottom.wheelsPtr->rotate({0.0f, 0.0f, deltaTime * angle});
-			trainBottom.rodsPtr->move({ -dx0+dx, -dy0+dy, 0.0f });
-			dx0 = dx;
-			dy0 = dy;
-			pos += deltaTime*angle;
-			// 1.35 - radius of wheels
-			trainBottom.move({ -deltaTime * angle / 180 * M_PI * 1.35f, 0.0f, 0.0f });
+			railTrack.draw(); 
 			
+			skybox.draw(projection, view);
+
+			if (deltaT >= 0.25) {
+				spf = 250 / (double)nbFrames;
+				nbFrames = 0;
+				lastTime += 0.25f;
+			}
+			RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
+			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
+			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
 
 
 
