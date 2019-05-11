@@ -12,6 +12,7 @@
 #include "Sphere.h"
 #include "ThreeShapes.h"
 #include "Text.h"
+#include "RailTrack.h"
 #include "Skybox.h"
 
 
@@ -79,8 +80,10 @@ int main()
 		auto shCylinder = Cylinder::getShaderPtr();
 		auto shSphere = Sphere::getShaderPtr();
 		auto shCube = Cube::getShaderPtr();
+
+		auto railTrack = RailTrack(100 ,0.6f);
 		auto skybox = Skybox();
-		auto threeShapes = ThreeShapes();
+
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
@@ -115,10 +118,12 @@ int main()
 			auto view = camera.GetViewMatrix();
 			applyViewToShaders({ shCylinder, shCube, shSphere }, projection, view);
 
-			threeShapes.move({ 0.001f, 0.0f, 0.0f });
-			threeShapes.rotate({ 0.1f, 0.0f, 0.0f });
-			threeShapes.draw();
+			//threeShapes.move({ 0.001f, 0.0f, 0.0f });
+			//threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
+			//threeShapes.draw();
 
+			railTrack.draw(); 
+			
 			skybox.draw(projection, view);
 
 			if (deltaT >= 0.25) {

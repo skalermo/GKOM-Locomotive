@@ -83,11 +83,11 @@ private:
 				insertVert(firstPoint);
 			}
 		}
-
+		
 		for (int j = 0; j < 2; j++)
 		{
-		  	direction = glm::vec3(0, 0, 1);
-	    	firstPoint = glm::vec3(-1, -1, 1);
+			direction = glm::vec3(0, 0, 1);
+			firstPoint = glm::vec3(-1, -1, 1);
 			insertVert(glm::vec3(firstPoint.x, firstPoint.y, firstPoint.z * (GLfloat)(pow(-1, j))));
 			for (int i = 0; i < 3; i++)
 			{
