@@ -207,11 +207,11 @@ protected:
 		generateIndices();
 		setUpBuffers();
 		texture = Texture(texturePath, true);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, coordinates);
-		model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::mat4(1.0f);
+		//model = glm::translate(model, coordinates);
+		//model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	}
 	
 	

@@ -96,7 +96,7 @@ public:
 
 
 
-	virtual void draw()
+	virtual void draw() override
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, coordinates);
@@ -110,12 +110,12 @@ public:
 		glBindVertexArray(0);
 	}
 
-	virtual void move(glm::vec3 displacement)
+	void move(glm::vec3 displacement) override
 	{
 		this->coordinates += displacement;
 	}
 
-	void rotate(const glm::vec3& rotations)
+	void rotate(const glm::vec3& rotations) override
 	{
 		this->rotations += rotations;
 	}
