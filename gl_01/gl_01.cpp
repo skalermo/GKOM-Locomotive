@@ -40,7 +40,8 @@ bool firstMouse = true;
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
-float angle = 0.0f;
+// locomotive speed
+float speed = 0.0f;
 
 
 int main()
@@ -85,6 +86,7 @@ int main()
 		auto shSphere = Sphere::getShaderPtr();
 		auto shCube = Cube::getShaderPtr();
 		
+		auto trainBottom = TrainBottom();
 		auto railTrack = RailTrack(100 ,0.6f);
 		auto skybox = Skybox();
 
@@ -126,6 +128,10 @@ int main()
 			//threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
 			//threeShapes.draw();
 
+
+			trainBottom.move({deltaTime * speed, 0.0f, 0.0f });
+			
+			trainBottom.draw();
 			railTrack.draw(); 
 			
 			skybox.draw(projection, view);
@@ -138,6 +144,7 @@ int main()
 			RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
+            RenderText(shText, "Train speed: " + doubleToString(speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
 
 
 
@@ -187,9 +194,9 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		angle += 0.5f;
+		speed += 0.05f;
 	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		angle -= 0.5f;
+		speed -= 0.05f;
 }
 
 
