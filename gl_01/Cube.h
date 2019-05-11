@@ -120,7 +120,8 @@ private:
 
 
 public : 
-	Cube(glm::vec3 coordinates, glm::vec3 size, std::string texturePath, glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f)) :
+	Cube(glm::vec3 coordinates, glm::vec3 size, std::string texturePath,
+		glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f)) :
 		texturePath(texturePath),
 		size(size),
 		rotation(rotation),

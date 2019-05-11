@@ -24,7 +24,7 @@ Number of segments which makes cylinder smooth enough
 
 class Cylinder : public Object
 {
-private:
+protected:
 
 	/*
 	Two planes - Top and Bottom, maybe will be changed later if there should be any planes between Top and Bottom
@@ -208,10 +208,10 @@ private:
 		setUpBuffers();
 		texture = Texture(texturePath, true);
 		model = glm::mat4(1.0f);
+		model = glm::translate(model, coordinates);
 		model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::translate(model, coordinates);
 	}
 	
 	
@@ -254,6 +254,11 @@ public:
 
 	virtual void draw()
 	{
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, coordinates);
+		model = glm::rotate(model, glm::radians(rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::rotate(model, glm::radians(rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		texture.useTexture(shader);
 		shader->setTransformMatrix("model", model);
 		glBindVertexArray(VAO);
@@ -264,17 +269,18 @@ public:
 	virtual void move(glm::vec3 displacement)
 	{
 		this->coordinates += displacement;
-		model = glm::translate(model, displacement);
+		//this->coordinates += displacement;
+		//model = glm::translate(model, displacement);
 	}
 
 	void rotate(const glm::vec3& rotations)
 	{
 		this->rotations += rotations;
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, coordinates);
-		model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::mat4(1.0f);
+		//model = glm::translate(model, coordinates);
+		//model = glm::rotate(model, glm::radians(this->rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(this->rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
+		//model = glm::rotate(model, glm::radians(this->rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
 		
 	}
 
