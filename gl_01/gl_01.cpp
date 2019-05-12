@@ -87,14 +87,14 @@ int main()
 		auto shCube = Cube::getShaderPtr();
 		
 		auto trainBottom = TrainBottom();
-		auto railTrack = RailTrack(100 ,0.6f);
+		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
 
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 
-		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0, speed = 0.0f;
+		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0f, speed = 0.0f;
 		int nbFrames = 0;
 
 
