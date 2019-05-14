@@ -4,16 +4,14 @@
 #include <vector>
 #include <cmath>
 #include <corecrt_math_defines.h>
-#include "Object.h"
 #include "ShaderProvider.h"
-#include "Texture.h"
 #include "Primitive.h"
 
 
 class Sphere : public Primitive {
-
 	float radius;
 	int mLatitudes, mMeridians;
+
 	void generateVertices() override {
 		for (size_t i = 0; i < mMeridians + 1; i++)
 		{
@@ -50,7 +48,6 @@ class Sphere : public Primitive {
 				indices.push_back(i * (mLatitudes + 2) + j);
 				indices.push_back(i * (mLatitudes + 2) + j + 1);
 				indices.push_back((i + 1) * (mLatitudes + 2) + j + 1);
-
 
 
 				indices.push_back((i + 1) * (mLatitudes + 2) + j + 1);

@@ -168,5 +168,10 @@ public :
 		glBindVertexArray(0);
 	}
 
+	void scale(glm::vec3 amount)
+	{
+		size += amount;
+	}
+
 
 };
