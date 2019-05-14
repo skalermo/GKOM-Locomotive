@@ -24,7 +24,7 @@ Number of segments which makes cylinder smooth enough
 
 class Cylinder : public Object
 {
-protected:
+private:
 
 	/*
 	Two planes - Top and Bottom, maybe will be changed later if there should be any planes between Top and Bottom
