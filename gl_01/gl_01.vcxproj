@@ -103,6 +103,7 @@
     <ClInclude Include="ShaderProvider.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TrainBottom.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shCube.frag" />
