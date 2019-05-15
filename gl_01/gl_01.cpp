@@ -88,7 +88,7 @@ int main()
 		auto shCube = Cube::getShaderPtr();
 
 		auto train = Train();
-		auto railTrack = RailTrack(100, 0.6f);
+		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
 
 
