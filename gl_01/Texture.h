@@ -42,7 +42,7 @@ public:
 
 		const auto image = SOIL_load_image(texturePath.c_str(), &width, &height, nullptr, SOIL_LOAD_AUTO);
 		if (image == nullptr)
-			throw std::exception("Failed to load texture file");
+			throw std::exception(std::string("Failed to load texture file " + texturePath).c_str());
 
 		glGenTextures(1, &texture);
 
