@@ -110,7 +110,7 @@ int main()
 			// input
 			// -----
 			processInput(window);
-			inputTrainResize(window, train);
+			///inputTrainResize(window, train);
 
 			mouse_callback(window, lastX, lastY);
 			//scroll_callback(window, 3, 3);

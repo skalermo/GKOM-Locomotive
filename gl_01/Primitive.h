@@ -25,6 +25,7 @@ protected:
 
 	glm::vec3 coordinates;
 	glm::vec3 rotations;
+	glm::vec3 size; 
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
@@ -78,8 +79,8 @@ protected:
 
 
 public:
-	Primitive(glm::vec3 coordinates, glm::vec3 rotations, std::string texturePath) 
-	: coordinates(coordinates), rotations(rotations), texturePath(texturePath)	{}
+	Primitive(glm::vec3 coordinates, glm::vec3 rotations, glm::vec3 size, std::string texturePath) 
+	: coordinates(coordinates), rotations(rotations), size(size), texturePath(texturePath)	{}
 
 	virtual ~Primitive()
 	{
@@ -97,6 +98,7 @@ public:
 		model = glm::rotate(model, glm::radians(rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
+		model = glm::scale(model, size); 
 
 		texture.useTexture(shader);
 		shader->setTransformMatrix("model", model);

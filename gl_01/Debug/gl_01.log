@@ -12,8 +12,8 @@ c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(27): warning C4244: "=": kon
           [
               T=float
           ]
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(43): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(46): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(49): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\composite.h(41): warning C4018: "<=": niezgodność typu ze znakiem/bez znaku
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\trainbottom.h(85): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\trainbottom.h(86): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych

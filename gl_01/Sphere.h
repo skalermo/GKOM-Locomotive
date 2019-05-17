@@ -73,7 +73,7 @@ public:
 	Sphere(const glm::vec3 coordinates, const float radius, const std::string& texturePath,
 		const glm::vec3& rotation = glm::vec3(0.0f),
 		const int widthSectors = 36, const int heightSectors = 30)
-		: Primitive(coordinates,rotation, texturePath),
+		: Primitive(coordinates, rotation, { 1, 1, 1 }, texturePath),
 	      radius(radius),  mLatitudes(widthSectors), mMeridians(heightSectors)
 	{
 		shader = getShaderPtr();
