@@ -95,6 +95,7 @@
     <ClInclude Include="Composite.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="Primitive.h" />
     <ClInclude Include="RailTrack.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="ThreeShapes.h" />
