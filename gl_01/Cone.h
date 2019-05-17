@@ -38,6 +38,9 @@ class Cone : public Primitive
 		vertices.push_back(centerCoords.x);
 		vertices.push_back(centerCoords.y);
 		vertices.push_back(centerCoords.z);
+		vertices.push_back(1);//normals
+		vertices.push_back(1);//normals
+		vertices.push_back(1);//normals
 		vertices.push_back(0.25f);
 		vertices.push_back(0.25f);
 		for (size_t i = 0; i < segments; i++)
@@ -51,6 +54,9 @@ class Cone : public Primitive
 			vertices.push_back(x);
 			vertices.push_back(y);
 			vertices.push_back(z);
+			vertices.push_back(1);//normals
+			vertices.push_back(1);//normals
+			vertices.push_back(1);//normals
 			vertices.push_back(u);
 			vertices.push_back(v);
 		}
@@ -58,6 +64,9 @@ class Cone : public Primitive
 		vertices.push_back(centerCoords.x);
 		vertices.push_back(centerCoords.y);
 		vertices.push_back(centerCoords.z + height);
+		vertices.push_back(1);//normals
+		vertices.push_back(1);//normals
+		vertices.push_back(1);//normals
 		vertices.push_back(0.25f);
 		vertices.push_back(0.25f);
 	}
@@ -77,7 +86,7 @@ class Cone : public Primitive
 		}
 
 
-		const int top = vertices.size() / 5 - 1;
+		const int top = vertices.size() / 8 - 1;
 		for (size_t i = 1; i <= segments; i++)
 		{
 			const int bottomV = i;

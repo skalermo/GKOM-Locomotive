@@ -31,6 +31,9 @@ class Sphere : public Primitive {
 				vertices.push_back(pos.x);
 				vertices.push_back(pos.y);
 				vertices.push_back(pos.z);
+				vertices.push_back(1);//normals
+				vertices.push_back(1);//normals
+				vertices.push_back(1);//normals
 				vertices.push_back(texCoords.x);
 				vertices.push_back(texCoords.y);
 			}
