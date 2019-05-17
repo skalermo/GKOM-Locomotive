@@ -1,29 +1,29 @@
 ﻿  gl_01.cpp
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(16): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(18): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(25): warning C4244: "argument": konwersja z "const double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(26): warning C4244: "=": konwersja z "double" do "T", możliwa utrata danych
+          with
+          [
+              T=float
+          ]
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(27): warning C4244: "=": konwersja z "double" do "T", możliwa utrata danych
+          with
+          [
+              T=float
+          ]
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(43): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(46): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(48): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(55): warning C4244: "argument": konwersja z "const double" do "float", możliwa utrata danych
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(56): warning C4244: "=": konwersja z "double" do "T", możliwa utrata danych
-          with
-          [
-              T=float
-          ]
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(57): warning C4244: "=": konwersja z "double" do "T", możliwa utrata danych
-          with
-          [
-              T=float
-          ]
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(69): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\sphere.h(72): warning C4018: "<": niezgodność typu ze znakiem/bez znaku
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\composite.h(41): warning C4018: "<=": niezgodność typu ze znakiem/bez znaku
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\trainbottom.h(85): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\trainbottom.h(86): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\trainbottom.h(91): warning C4244: "+=": konwersja z "double" do "float", możliwa utrata danych
 c:\users\rafal\opengl\zp2-lokomotywa\gl_01\text.h(101): warning C4838: konwersja z „FT_Pos” do „GLuint” wymaga konwersji zawężającej
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(97): warning C4244: "=": konwersja z "double" do "float", możliwa utrata danych
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(104): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(214): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(215): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
-c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(227): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(98): warning C4244: "=": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(105): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(233): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(234): warning C4244: "inicjowanie": konwersja z "double" do "float", możliwa utrata danych
+c:\users\rafal\opengl\zp2-lokomotywa\gl_01\gl_01.cpp(246): warning C4244: "argument": konwersja z "double" do "float", możliwa utrata danych
   soil.lib(SOIL.obj) : znaleziono moduł .netmodule MSIL lub moduł skompilowany z opcją /GL; konsolidowanie zostanie rozpoczęte ponownie z opcją /LTCG; dodaj opcję /LTCG do wiersza polecenia konsolidacji w celu podwyższenia wydajności konsolidatora
   Trwa generowanie kodu
   Zako±czono generowanie kodu
