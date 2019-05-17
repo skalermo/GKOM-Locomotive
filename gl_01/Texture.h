@@ -33,7 +33,7 @@ public:
 	 * \param textureName name of a texture that will be visible in shader
 	 * \param textureIndex index of the texture in the shader(only range (0...3) is available
 	 */
-	Texture(const std::string& texturePath, bool rgba = false, std::string textureName = "Texture0", const int textureIndex = 0)
+	Texture(const std::string& texturePath, bool rgba = true, std::string textureName = "Texture0", const int textureIndex = 0)
 		: textureIndex(textureIndex), textureName(textureName) {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
