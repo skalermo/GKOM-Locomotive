@@ -39,85 +39,62 @@ private:
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices[0], GL_STATIC_DRAW);
 
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+		/*glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
 
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);*/
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), static_cast<GLvoid*>(0));
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
 		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(2);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 
 		glBindVertexArray(0); // Unbind VAO (it's always a good thing to unbind any buffer/array to prevent strange bugs), remember: do NOT unbind the EBO, keep it bound to this VAO
 		texture = Texture(texturePath); 
 	}
-	void insertVert(glm::vec3 v)
+	void insertVert(glm::vec3 v, glm::vec3 n)
 	{
 		V.push_back(v.x);
 		V.push_back(v.y); 
 		V.push_back(v.z);
-		int gray = (((V.size() - 1) / 5 % 4) >> 1) ^ (((V.size() - 1) / 5 % 4));
+		V.push_back(n.x); 
+		V.push_back(n.y); 
+		V.push_back(n.z); 
+		int gray = (((V.size() - 1) / 8 % 4) >> 1) ^ (((V.size() - 1) / 8 % 4));
 		
 		V.push_back((GLfloat)(gray >> 1));
 		V.push_back((GLfloat)(gray %2));
+
 	}
 
-	void generate()
+	void generateWall(glm::vec3 normal, int indiceNumber)
 	{
-		glm::vec3 normal = glm::vec3(0, 0, 1);
-		glm::vec3 direction = glm::vec3(-1, 0, 0);
-		glm::vec3 firstPoint = glm::vec3(-1, -1, 1);
+		glm::vec3 firstPoint; 
+		firstPoint.x = normal.x == 0 ? -1 : normal.x;
+		firstPoint.y = normal.y == 0 ? -1 : normal.y; 
+		firstPoint.z = normal.z == 0 ? 1 : normal.z; 
 
-		insertVert(firstPoint);
-
-		for (int i = 0; i < 3; i++)
-		{
-			firstPoint = cross(firstPoint, direction) + direction;
-			insertVert(firstPoint);
-		}
-		for (int i = 0; i < 2; i++)
-		{
-			direction = glm::cross(direction, normal);
-			for (int j = 0; j < 2; j++)
-			{
-				firstPoint = (cross(direction, firstPoint) *(float)pow(-1, i) + direction);
-				insertVert(firstPoint);
-			}
-		}
-		
-		for (int j = 0; j < 2; j++)
-		{
-			direction = glm::vec3(0, 0, 1);
-			firstPoint = glm::vec3(-1, -1, 1);
-			insertVert(glm::vec3(firstPoint.x, firstPoint.y, firstPoint.z * (GLfloat)(pow(-1, j))));
-			for (int i = 0; i < 3; i++)
-			{
-				firstPoint = cross(firstPoint, direction) + direction;
-				insertVert(glm::vec3(firstPoint.x, firstPoint.y, firstPoint.z * (GLfloat)(pow(-1, j))));
-			}
-		}
-
-
-		int a = 0, b = 1, c = 2;
-		for (int i = 0; i < 8; i++)
-		{
-			indices.push_back(a % 8);
-			indices.push_back(b % 8);
-			indices.push_back(c % 8);
-			if (i % 2) { a += 2, c += 2; }
-			else b += 2;
-		}
-
-		a = 8, b = 9, c = 10;
 		for (int i = 0; i < 4; i++)
 		{
-			indices.push_back(a);
-			indices.push_back(b);
-			indices.push_back(c);
-			if (!((i + 1) % 2)) { a += 4, c += 4; }
-			b += 2;
+			insertVert(firstPoint, normal); 
+			firstPoint = cross(firstPoint, normal) + normal;
 		}
-	}
 
+		indices.push_back(indiceNumber); 
+		indices.push_back(indiceNumber + 1); 
+		indices.push_back(indiceNumber + 2); 
+		indices.push_back(indiceNumber + 2); 
+		indices.push_back(indiceNumber + 3); 
+		indices.push_back(indiceNumber); 
+
+	}
 
 public : 
 	Cube(glm::vec3 coordinates, glm::vec3 size, std::string texturePath,
@@ -127,7 +104,14 @@ public :
 		rotation(rotation),
 		coordinates(coordinates)
 	{
-		generate();
+		generateWall({ -1, 0, 0 }, 0);
+		generateWall({ 0, -1, 0 }, 4);
+		generateWall({ 0, 0, -1 }, 8);
+		generateWall({ 1, 0, 0 }, 12);
+		generateWall({ 0, 1, 0 }, 16); 
+		generateWall({ 0, 0, 1 }, 20); 
+		
+
 		shader = ShaderProvider::instance().getShader("shCube.vert", "shCube.frag"); 
 		setUpBuffers(); 
 	}
