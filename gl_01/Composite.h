@@ -19,16 +19,26 @@
 */
 class Composite : public Object {
 public:
-	virtual void draw() {
+	void draw() override
+	{
 		for (auto& child : children)
 			child->draw();
 	}
-	virtual void move(glm::vec3 displacement) {
+
+	void move(glm::vec3 displacement) override
+	{
 		for (auto& child : children)
 			child->move(displacement);
 	}
 
-	virtual void rotate(const glm::vec3& displacement) {
+	void scale(glm::vec3 amount) override
+	{
+		for (auto& child : children)
+			child->scale(amount);
+	}
+
+	void rotate(const glm::vec3& displacement) override
+	{
 		for (auto& child : children)
 			child->rotate(displacement);
 	}
@@ -37,13 +47,13 @@ public:
 		children.push_back(std::move(child));
 	}
 	
-	void removeChild(int index) {
+	void removeChild(size_t index) {
 		if (children.size() <= index)
 			throw std::exception("Children index out of range");
 		children.erase(children.begin() + index);
 	}
 
-	virtual ~Composite() {}
+	virtual ~Composite() = default;
 
 protected:
 	std::vector<std::unique_ptr<Object>> children;

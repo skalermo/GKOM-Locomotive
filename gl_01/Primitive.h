@@ -25,14 +25,14 @@ protected:
 
 	glm::vec3 coordinates;
 	glm::vec3 rotations;
-	glm::vec3 size; 
+	glm::vec3 size;
+	glm::mat4 model;
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
 	std::shared_ptr<Shader> shader;
 	GLuint VAO, VBO, EBO;
 
-	glm::mat4 model;
 	Texture texture;
 	const std::string texturePath;
 
@@ -79,8 +79,8 @@ protected:
 
 
 public:
-	Primitive(glm::vec3 coordinates, glm::vec3 rotations, glm::vec3 size, std::string texturePath) 
-	: coordinates(coordinates), rotations(rotations), size(size), texturePath(texturePath)	{}
+	Primitive(glm::vec3 coordinates, glm::vec3 rotations, std::string texturePath, glm::vec3 size = {1.f, 1.f, 1.f})
+		: coordinates(coordinates), rotations(rotations), size(size), texturePath(texturePath) {}
 
 	virtual ~Primitive()
 	{
@@ -98,7 +98,7 @@ public:
 		model = glm::rotate(model, glm::radians(rotations.x), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotations.y), glm::vec3(0.0f, 1.0f, 0.0f));
 		model = glm::rotate(model, glm::radians(rotations.z), glm::vec3(0.0f, 0.0f, 1.0f));
-		model = glm::scale(model, size); 
+		model = glm::scale(model, size);
 
 		texture.useTexture(shader);
 		shader->setTransformMatrix("model", model);
@@ -110,6 +110,11 @@ public:
 	void move(glm::vec3 displacement) override
 	{
 		this->coordinates += displacement;
+	}
+
+	void scale(glm::vec3 amount) override
+	{
+		this->size += amount;
 	}
 
 	void rotate(const glm::vec3& rotations) override

@@ -17,6 +17,8 @@ public:
 	*/
 	virtual void move(glm::vec3 displacement) = 0;
 
+	virtual void scale(glm::vec3 amount) = 0;
+
 	virtual void rotate(const glm::vec3& displacement) = 0;
 	virtual ~Object() {}
 };

@@ -18,7 +18,7 @@ class TrainTop : public Composite
 
 	//BODY COORDINATES
 	float bodyWidth = 12.3f, bodyRadius = 1.66f;
-	glm::vec3 bodyCords = glm::vec3(-bodyWidth / 2 + 3.0, 1.5f, 2.0f);
+	glm::vec3 bodyCords = glm::vec3(-bodyWidth / 2 + 3.0, 1.9f, 2.0f);
 
 	//CABIN COORDINATES
 	float cabinWidth = 1.1f, cabinLength = 2.0f, cabinHeight = 1.0f;

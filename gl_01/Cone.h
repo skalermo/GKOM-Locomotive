@@ -109,7 +109,7 @@ public:
 		Cone(coordinates, height, radius, DEFAULT_SEGMENTS_NUMBER, glm::vec3(0.0f), texturePath) {}
 
 	Cone(glm::vec3 coordinates, GLfloat height, GLfloat radius, GLuint segments, glm::vec3 rotations, std::string texturePath) :
-		Primitive(coordinates, rotations, { 1, 1, 1 }, texturePath),
+		Primitive(coordinates, rotations, texturePath),
 		height(height),
 		radius(radius),
 		segments(segments)

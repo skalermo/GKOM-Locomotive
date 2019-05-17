@@ -27,8 +27,6 @@ private:
 	*/
 	static const unsigned int DEFAULT_SEGMENTS_NUMBER = 18;
 
-	glm::vec3 scaleValue = glm::vec3(1.f);
-
 	GLfloat height;
 	GLfloat radius;
 
@@ -191,19 +189,13 @@ public:
 	Long version constructor
 	*/
 	Cylinder(glm::vec3 coordinates, GLfloat height, GLfloat radius, GLuint segments, glm::vec3 rotations, std::string texturePath)
-	: Primitive(coordinates, rotations, {1.0f, 1.0f, 1.0f}, texturePath),
+	: Primitive(coordinates, rotations, texturePath),
 		height(height),
 		radius(radius),
 		segments(segments)
 	{
 		shader = getShaderPtr();
 		init();
-	}
-	
-	void scale(glm::vec3 amount)
-	{
-		scaleValue += amount;
-		size = scaleValue;
 	}
 
 	static std::shared_ptr<Shader> getShaderPtr() {

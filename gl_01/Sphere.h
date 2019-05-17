@@ -10,7 +10,7 @@
 
 class Sphere : public Primitive {
 	float radius;
-	int mLatitudes, mMeridians;
+	unsigned int mLatitudes, mMeridians;
 
 	void generateVertices() override {
 		for (size_t i = 0; i < mMeridians + 1; i++)
@@ -67,13 +67,13 @@ public:
 		@widthSectors - number of lines that are vertical(goes from north pole to south pole)
 		@heightSectors - number of line that are horizontal
 	*/
-	Sphere(const float radius, const std::string& texturePath, int widthSectors = 36, int heightSectors = 30)
+	Sphere(const float radius, const std::string& texturePath)
 		:Sphere(glm::vec3(0.0f), radius, texturePath) {}
 
 	Sphere(const glm::vec3 coordinates, const float radius, const std::string& texturePath,
 		const glm::vec3& rotation = glm::vec3(0.0f),
-		const int widthSectors = 36, const int heightSectors = 30)
-		: Primitive(coordinates, rotation, { 1, 1, 1 }, texturePath),
+		const unsigned int widthSectors = 36, const unsigned int heightSectors = 30)
+		: Primitive(coordinates, rotation, texturePath),
 	      radius(radius),  mLatitudes(widthSectors), mMeridians(heightSectors)
 	{
 		shader = getShaderPtr();
