@@ -8,7 +8,7 @@
 class TrainTop : public Composite
 {
 	const std::string cabinPath = "textures/black-steel.png";
-	const std::string bodyPath = "textures/locoCyl.png";
+	const std::string bodyPath = "textures/locoBody.png";
 
 	Cylinder* chimneyPtr;
 	Cylinder* bodyPtr;
