@@ -29,6 +29,7 @@ void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void processInput(GLFWwindow *window);
 void inputTrainResize(GLFWwindow*, Train&);
 string doubleToString(double);
@@ -63,6 +64,7 @@ int main()
 		if (window == nullptr)
 			throw exception("GLFW window not created");
 		glfwMakeContextCurrent(window);
+		glfwSetKeyCallback(window, key_callback);
 
 		glewExperimental = GL_TRUE;
 		if (glewInit() != GLEW_OK)
@@ -110,7 +112,7 @@ int main()
 			// input
 			// -----
 			processInput(window);
-			///inputTrainResize(window, train);
+			//inputTrainResize(window, train);
 
 			mouse_callback(window, lastX, lastY);
 			//scroll_callback(window, 3, 3);
@@ -182,11 +184,21 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void processInput(GLFWwindow *window)
+// alows to handle single key input
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
+	if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		speed += 1.0f;
+	if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
+		speed -= 1.0f;
+	
+}
+
+void processInput(GLFWwindow *window)
+{
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -195,10 +207,7 @@ void processInput(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		speed += 0.05f;
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		speed -= 0.05f;
+	
 }
 
 
