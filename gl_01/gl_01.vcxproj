@@ -93,6 +93,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Composite.h" />
+    <ClInclude Include="Cone.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Cylinder.h" />
     <ClInclude Include="Primitive.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TrainBottom.h" />
+    <ClInclude Include="TrainTop.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shCube.frag" />
