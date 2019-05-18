@@ -8,7 +8,7 @@
 class TrainTop : public Composite
 {
 	const std::string cabinPath = "textures/black-steel.png";
-	const std::string bodyPath = "textures/rodCircleTexture.png";
+	const std::string bodyPath = "textures/locoCyl.png";
 
 	Cylinder* chimneyPtr;
 	Cylinder* bodyPtr;
@@ -71,7 +71,7 @@ class TrainTop : public Composite
 			bodyWidth, 
 			bodyRadius, 
 			18, 
-			glm::vec3(45.f, 90.f, 0.f),
+			glm::vec3(90.f, 90.f, 0.f),
 			bodyPath
 		);
 
