@@ -118,8 +118,12 @@ public:
 		this->coordinates += displacement;
 	}
 
-	void rotate(const glm::vec3& rotation) {
+	void rotate(const glm::vec3& rotation) override{
 		throw std::exception("Dont use rotation with light");
+	}
+
+	void scale(glm::vec3 amount) override {
+		throw std::exception("Dont use scale with light");
 	}
 
 
