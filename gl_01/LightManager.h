@@ -4,6 +4,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "LightSrc.h"
+#include <iostream>
 
 class LightManager {
 private:
@@ -65,7 +66,7 @@ private:
 		GLfloat constant;
 		GLfloat linear;
 		GLfloat quadratic;
-		LightSrc lightsrc;
+		std::unique_ptr<LightSrc> lightsrc;
 
 	public:
 		PointLight(const glm::vec3& position,
@@ -81,7 +82,7 @@ private:
 			constant(constant), 
 			linear(linear), 
 			quadratic(quadratic),
-			lightsrc(LightSrc(position, 0.5f))
+			lightsrc(std::make_unique<LightSrc>(position, 0.5f))
 		{}
 		
 		glm::vec3 getPosition()
@@ -121,6 +122,7 @@ private:
 
 		void setPosition(const glm::vec3& newPosition)
 		{
+			lightsrc->move(newPosition - position);
 			position = newPosition;
 		}
 
@@ -156,7 +158,7 @@ private:
 
 		void drawLightSrc()
 		{
-			lightsrc.draw();
+			lightsrc->draw();
 		}
 	};
 
@@ -164,10 +166,10 @@ private:
 	DirectionalLight dirLight;
 	std::vector<std::unique_ptr<PointLight>> pointLights;
 	
-	Camera* camera;
+	Camera camera;
 	
 public:
-	LightManager(Camera* camera)
+	LightManager(const Camera& camera)
 	{
 		this->camera = camera;
 		dirLight = DirectionalLight();
@@ -177,6 +179,14 @@ public:
 	{
 		this->shader = shader;
 	}*/
+
+	void setDirLight()
+	{
+		setDirLight({1.0f, -0.62f, 0.175f},
+					{0.2f, 0.2f, 0.2f},
+					{0.5f, 0.5f, 0.5f},
+					{0.3f, 0.3f, 0.3f});
+	}
 
 	void setDirLight(const glm::vec3& direction, 
 					const glm::vec3& ambient, 
@@ -208,27 +218,36 @@ public:
 						const GLfloat& linear,
 						const GLfloat& quadratic)
 	{
-
-		pointLights.push_back(std::make_unique<PointLight>(PointLight(position,
-										ambient,
-										diffuse,
-										specular,
-										constant,
-										linear,
-										quadratic)));
+		if (pointLights.size() < 4)
+			pointLights.push_back(std::make_unique<PointLight>(PointLight(position,
+											ambient,
+											diffuse,
+											specular,
+											constant,
+											linear,
+											quadratic)));
 
 	}
 
-	void popLastLight()
+	void popLastPointLight()
 	{
-		pointLights.pop_back();
+		if (pointLights.size() > 0)
+			pointLights.pop_back();
+	}
+
+	void movePointLight(unsigned int index, glm::vec3 displacement)
+	{
+		if (index >= pointLights.size())
+			return;
+		pointLights[index]->setPosition(pointLights[index]->getPosition() + displacement);
+
 	}
 
 	void applyLightToShader(std::shared_ptr<Shader> shader)
 	{
 		shader->use();
 		shader->setInt("nr_point_lights", pointLights.size());
-		shader->setVec3f("viewPos", camera->Position);
+		shader->setVec3f("viewPos", camera.Position);
 		shader->setVec3f("dirLight.direction", dirLight.getDirection());
 		shader->setVec3f("dirLight.ambient", dirLight.getAmbient());
 		shader->setVec3f("dirLight.diffuse", dirLight.getDiffuse());
