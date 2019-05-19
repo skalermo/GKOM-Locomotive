@@ -1,0 +1,32 @@
+Hotkey                  Action
+
+ESC                     Zamyka program
+
+KEY_UP
+KEY_DOWN
+SPACE                   Hamowanie lokomotywy
+
+MINUS                   Usunięcie ostatniego punktowego źródła światła
+EQUALS                  Dodanie nowego punktowego źródła światła
+F2 + KEY_LEFT
+F2 + KEY_RIGHT
+F3 + KEY_LEFT
+F3 + KEY_LEFT
+F4 + KEY_LEFT
+F4 + KEY_LEFT
+F5 + KEY_LEFT
+F5 + KEY_LEFT
+
+W
+A                       Poruszanie kamery w przód
+S
+D
+
+B           
+C           
+N       
+V
+X
+Z
+
+
