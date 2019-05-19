@@ -16,6 +16,8 @@
 #include "RailTrack.h"
 #include "Skybox.h"
 #include "Train.h"
+#include "LightManager.h"
+#include "LightSrc.h"
 
 
 using namespace std;
@@ -35,9 +37,12 @@ void inputTrainResize(GLFWwindow*, Train&);
 string doubleToString(double);
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+LightManager lightManager(camera);
 double lastX;
 double lastY;
 bool firstMouse = true;
+bool slowTrainDown = false;
+
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
@@ -88,10 +93,13 @@ int main()
 		auto shCylinder = Cylinder::getShaderPtr();
 		auto shSphere = Sphere::getShaderPtr();
 		auto shCube = Cube::getShaderPtr();
+		auto shLightSrc = LightSrc::getShaderPtr();
+		lightManager.setDirLight();
 
 		auto train = Train();
 		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
+		//auto lightsrc = LightSrc({0.0f, 0.0f, 0.0f}, 1.0f);
 
 
 		glEnable(GL_DEPTH_TEST);
@@ -99,7 +107,6 @@ int main()
 
 		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0;
 		int nbFrames = 0;
-
 
 		// main loop
 		while (!glfwWindowShouldClose(window))
@@ -109,6 +116,15 @@ int main()
 			deltaT = currentFrame - lastTime;
 			lastFrame = currentFrame;
 			nbFrames++;
+			if (slowTrainDown)
+			{	
+				speed -= speed < 0 ? -0.1f : 0.05f;
+				if (std::fabsf(speed) - 0.1f < 0)
+				{
+					speed = 0;
+					slowTrainDown = false;
+				}
+			}
 			// input
 			// -----
 			processInput(window);
@@ -127,7 +143,9 @@ int main()
 			auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 			auto view = camera.GetViewMatrix();
 
-			applyViewToShaders({ shCylinder, shCube, shSphere }, projection, view);
+			applyViewToShaders({ shCube, shLightSrc }, projection, view);
+			lightManager.applyLightToShader(shCube);
+
 			//threeShapes.move({ 0.001f, 0.0f, 0.0f });
 			//threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
 			//threeShapes.draw();
@@ -137,6 +155,7 @@ int main()
 
 			train.draw();
 			railTrack.draw();
+			//lightsrc.draw();
 
 			skybox.draw(projection, view);
 
@@ -148,7 +167,7 @@ int main()
 			RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "Train speed: " + doubleToString(speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
+			RenderText(shText, "Train speed: " + doubleToString(-speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
 
 
 
@@ -190,10 +209,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-	if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		speed += 1.0f;
-	if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
-		speed -= 1.0f;
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		slowTrainDown = true;
+	if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
+		lightManager.addNewPointLight();
+	if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
+		lightManager.popLastPointLight();
 	
 }
 
@@ -207,6 +228,38 @@ void processInput(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+		speed -= 0.05;
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+		speed += 0.05f;
+
+	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+			lightManager.movePointLight(0, { -deltaTime, 0.0f, 0.0f });
+	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+			lightManager.movePointLight(0, { deltaTime, 0.0f, 0.0f });
+
+	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+			lightManager.movePointLight(1, { -deltaTime, 0.0f, 0.0f });
+	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+			lightManager.movePointLight(1, { deltaTime, 0.0f, 0.0f });
+
+	if (glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+			lightManager.movePointLight(2, { -deltaTime, 0.0f, 0.0f });
+	if (glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+			lightManager.movePointLight(2, { deltaTime, 0.0f, 0.0f });
+
+	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+			lightManager.movePointLight(3, { -deltaTime, 0.0f, 0.0f });
+	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+			lightManager.movePointLight(3, { deltaTime, 0.0f, 0.0f });
 	
 }
 
