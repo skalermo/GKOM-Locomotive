@@ -32,8 +32,6 @@ class LightSrc : public Object {
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), static_cast<GLvoid*>(0));
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
 	}
 
 	void generateVertices(float radius, const int mLatitudes, const int mMeridians) {
