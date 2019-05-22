@@ -16,6 +16,7 @@
 #include "RailTrack.h"
 #include "Skybox.h"
 #include "Train.h"
+#include "Cactus.h"
 
 
 using namespace std;
@@ -92,6 +93,7 @@ int main()
 		auto train = Train();
 		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
+		auto cactus = Cactus(50); 
 
 
 		glEnable(GL_DEPTH_TEST);
@@ -137,6 +139,7 @@ int main()
 
 			train.draw();
 			railTrack.draw();
+			cactus.draw();
 
 			skybox.draw(projection, view);
 
