@@ -12,7 +12,7 @@ class Cactus : public Composite
 private:
 	float groundLevel;
 public:
-	void createBranch(float rotation, glm::vec3 coords, float height)
+	void createBranch(float rotation, glm::vec3 coords, float height, float radius)
 	{
 		std::unique_ptr<Cylinder> core; 
 		std::unique_ptr<Sphere> top;
@@ -26,8 +26,8 @@ public:
 			sphereCoords = glm::vec3(coords.x, coords.y,coords.z -height);
 		else if (rotation == 3)
 			sphereCoords = glm::vec3(coords.x, coords.y + height, coords.z); 
-		core = std::make_unique<Cylinder>(coords, height, 0.3f, 20, glm::vec3(rotation*90,0,0),  "textures/cactus.png");
-		top = std::make_unique<Sphere>(sphereCoords, 0.3, "textures/cactus.png");
+		core = std::make_unique<Cylinder>(coords, height, radius, 20, glm::vec3(rotation*90,0,0),  "textures/cactus.png");
+		top = std::make_unique<Sphere>(sphereCoords, radius, "textures/cactus.png");
 		addChild(std::move(core)); 
 		addChild(std::move(top)); 
 	}
@@ -43,13 +43,14 @@ public:
 		float branch2Length = random(0.4, coreHeight - 0.6);
 		float branch3Height = random(0.3, coreHeight - 0.6); 
 		float branch4Height = random(0.3, coreHeight - 0.6); 
+		float radius = random(0.1, 0.6); 
 		
 		groundLevel = -1.55f;
-		createBranch(3, glm::vec3(0, 0 + groundLevel, 0) + coords, coreHeight); 
-		createBranch(0, glm::vec3(0, branch1Height + groundLevel, 0) + coords, branch1Length); 
-		createBranch(3, glm::vec3(0, branch1Height + groundLevel, branch1Length) + coords, branch3Height); 
-		createBranch(2, glm::vec3(0, branch2Height + groundLevel, 0) + coords, branch2Length); 
-		createBranch(3, glm::vec3(0, branch2Height + groundLevel, -branch2Length) + coords, branch4Height);
+		createBranch(3, glm::vec3(0, 0 + groundLevel, 0) + coords, coreHeight, radius); 
+		createBranch(0, glm::vec3(0, branch1Height + groundLevel, 0) + coords, branch1Length, radius); 
+		createBranch(3, glm::vec3(0, branch1Height + groundLevel, branch1Length) + coords, branch3Height, radius); 
+		createBranch(2, glm::vec3(0, branch2Height + groundLevel, 0) + coords, branch2Length, radius); 
+		createBranch(3, glm::vec3(0, branch2Height + groundLevel, -branch2Length) + coords, branch4Height, radius);
 	}
 
 	float random(float min, float max)
