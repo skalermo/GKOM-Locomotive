@@ -4,7 +4,6 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "LightSrc.h"
-#include <iostream>
 
 class LightManager {
 private:
@@ -162,9 +161,157 @@ private:
 		}
 	};
 
+	class SpotLight {
+	private:
+		glm::vec3 position;
+		glm::vec3 direction;
+		GLfloat cutOff;
+		GLfloat outerCutOff;
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+		GLfloat constant;
+		GLfloat linear;
+		GLfloat quadratic;
+		std::unique_ptr<LightSrc> lightsrc;
+
+	public:
+		SpotLight(const glm::vec3& position,
+			const glm::vec3& direction,
+			const GLfloat& cutOff,
+			const GLfloat& outerCutOff,
+			const glm::vec3& ambient,
+			const glm::vec3& diffuse,
+			const glm::vec3& specular,
+			const GLfloat& constant,
+			const GLfloat& linear,
+			const GLfloat& quadratic)
+			: position(position),
+			direction(direction),
+			cutOff(cutOff),
+			outerCutOff(outerCutOff),
+			ambient(ambient),
+			diffuse(diffuse),
+			specular(specular),
+			constant(constant),
+			linear(linear),
+			quadratic(quadratic),
+			lightsrc(std::make_unique<LightSrc>(position, 0.5f))
+		{}
+			
+
+		glm::vec3 getPosition()
+		{
+			return position;
+		}
+
+		glm::vec3 getDirection()
+		{
+			return direction;
+		}
+
+		GLfloat getCutOff()
+		{
+			return cutOff;
+		}
+
+		GLfloat getOuterCutOff()
+		{
+			return outerCutOff;
+		}
+
+		glm::vec3 getAmbient()
+		{
+			return ambient;
+		}
+
+		glm::vec3 getDiffuse()
+		{
+			return diffuse;
+		}
+
+		glm::vec3 getSpecular()
+		{
+			return specular;
+		}
+
+		GLfloat getConstant()
+		{
+			return constant;
+		}
+
+		GLfloat getLinear()
+		{
+			return linear;
+		}
+
+		GLfloat getQuadratic()
+		{
+			return quadratic;
+		}
+
+		void setPosition(const glm::vec3& newPosition)
+		{
+			lightsrc->move(newPosition - position);
+			position = newPosition;
+		}
+
+		void setDirection(const glm::vec3& newDirection)
+		{
+			direction = newDirection;
+		}
+
+		void setCutOff(const GLfloat& newCutOff)
+		{
+			cutOff = newCutOff;
+		}
+
+		void setOuterCutOff(const GLfloat& newOuterCutOff)
+		{
+			outerCutOff = newOuterCutOff;
+		}
+
+		void setAmbient(const glm::vec3& newAmbient)
+		{
+			ambient = newAmbient;
+		}
+
+		void setDiffuse(const glm::vec3& newDiffuse)
+		{
+			diffuse = newDiffuse;
+		}
+
+		void setSpecular(const glm::vec3& newSpecular)
+		{
+			specular = newSpecular;
+		}
+
+		void setConstant(const GLfloat& newConstant)
+		{
+			constant = newConstant;
+		}
+
+		void setLinear(const GLfloat& newLinear)
+		{
+			linear = newLinear;
+		}
+
+		void setQuadratic(const GLfloat& newQuadratic)
+		{
+			quadratic = newQuadratic;
+		}
+
+		void drawLightSrc()
+		{
+			lightsrc->draw();
+		}
+
+	};
+
 	std::shared_ptr<Shader> shader;
-	DirectionalLight dirLight;
+	std::unique_ptr<DirectionalLight> dirLight;
 	std::vector<std::unique_ptr<PointLight>> pointLights;
+	std::shared_ptr<SpotLight> spotLight;
 	
 	Camera camera;
 	
@@ -172,7 +319,7 @@ public:
 	LightManager(const Camera& camera)
 	{
 		this->camera = camera;
-		dirLight = DirectionalLight();
+		dirLight = std::make_unique<DirectionalLight>(DirectionalLight());
 	}
 
 	/*void setShader(std::shared_ptr<Shader> shader)
@@ -193,10 +340,10 @@ public:
 					const glm::vec3& diffuse, 
 					const glm::vec3& specular)
 	{
-		dirLight.setDirection(direction);
-		dirLight.setAmbient(ambient);
-		dirLight.setDiffuse(diffuse);
-		dirLight.setSpecular(specular);
+		dirLight->setDirection(direction);
+		dirLight->setAmbient(ambient);
+		dirLight->setDiffuse(diffuse);
+		dirLight->setSpecular(specular);
 	}
 
 	void addNewPointLight()
@@ -240,8 +387,53 @@ public:
 		if (index >= pointLights.size())
 			return;
 		pointLights[index]->setPosition(pointLights[index]->getPosition() + displacement);
-
 	}
+
+	void moveSpotLight(glm::vec3 displacement)
+	{
+		if (!spotLight)
+			return;
+		spotLight->setPosition(spotLight->getPosition() + displacement);
+	}
+
+	std::shared_ptr<SpotLight> getSpotLight()
+	{
+		return getSpotLight({-3.0f, 2.0f, 2.0f},
+							{ -1.0f, 0.0f, 0.0f },
+							glm::cos(glm::radians(30.0f)),
+							glm::cos(glm::radians(45.0f)),
+							glm::vec3(0.2f),
+							glm::vec3(1.0f),
+							glm::vec3(0.8f),
+							1.0f,
+							0.09f,
+							0.032f);
+	}
+
+	std::shared_ptr<SpotLight> getSpotLight(const glm::vec3& position,
+											const glm::vec3& direction,
+											const GLfloat& cutOff,
+											const GLfloat& outerCutOff,
+											const glm::vec3& ambient,
+											const glm::vec3& diffuse,
+											const glm::vec3& specular,
+											const GLfloat& constant,
+											const GLfloat& linear,
+											const GLfloat& quadratic)
+	{
+		spotLight = std::make_shared<SpotLight>(SpotLight(position,
+														direction,
+														cutOff,
+														outerCutOff,
+														ambient,
+														diffuse,
+														specular,
+														constant,
+														linear,
+														quadratic));
+		return spotLight;
+	}
+
 
 	void applyLightToShader(std::shared_ptr<Shader> shader)
 	{
@@ -265,6 +457,24 @@ public:
 			shader->setFloat("pointLights[" + std::to_string(i) + "].linear", pointLights[i]->getLinear());
 			shader->setFloat("pointLights[" + std::to_string(i) + "].quadratic", pointLights[i]->getQuadratic());
 		}
+
+		if (spotLight)
+		{
+			spotLight->drawLightSrc();
+			shader->use();
+			shader->setVec3f("spotLight.position", spotLight->getPosition());
+			shader->setVec3f("spotLight.direction", spotLight->getDirection());
+			shader->setFloat("spotLight.cutOff", spotLight->getCutOff());
+			shader->setFloat("spotLight.outerCutOff", spotLight->getOuterCutOff());
+			shader->setFloat("spotLight.constant", spotLight->getConstant());
+			shader->setFloat("spotLight.linear", spotLight->getLinear());
+			shader->setFloat("spotLight.quadratic", spotLight->getQuadratic());
+			shader->setVec3f("spotLight.ambient", spotLight->getAmbient());
+			shader->setVec3f("spotLight.diffuse", spotLight->getDiffuse());
+			shader->setVec3f("spotLight.specular", spotLight->getSpecular());
+
+		}
+
 	}
 
 	int getLightSrcsCount()
