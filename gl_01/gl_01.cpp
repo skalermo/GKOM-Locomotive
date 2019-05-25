@@ -16,8 +16,10 @@
 #include "RailTrack.h"
 #include "Skybox.h"
 #include "Train.h"
+#include "Cactus.h"
 #include "LightManager.h"
 #include "LightSrc.h"
+
 
 
 using namespace std;
@@ -99,8 +101,7 @@ int main()
 		auto train = Train();
 		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
-		//auto lightsrc = LightSrc({0.0f, 0.0f, 0.0f}, 1.0f);
-
+		auto cactus = Cactus(50); 
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
@@ -140,7 +141,7 @@ int main()
 			//glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+			auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
 			auto view = camera.GetViewMatrix();
 
 			applyViewToShaders({ shCube, shLightSrc }, projection, view);
@@ -155,7 +156,7 @@ int main()
 
 			train.draw();
 			railTrack.draw();
-			//lightsrc.draw();
+			cactus.draw();
 
 			skybox.draw(projection, view);
 
