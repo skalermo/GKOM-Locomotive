@@ -2,12 +2,14 @@ Hotkey                  Action
 
 ESC                     Zamyka program
 
-KEY_UP
-KEY_DOWN
+KEY_UP                  Poruszanie się lokomotywy w przód
+KEY_DOWN                Poruszanie się lokomotywy w tył
 SPACE                   Hamowanie lokomotywy
 
 MINUS                   Usunięcie ostatniego punktowego źródła światła
 EQUALS                  Dodanie nowego punktowego źródła światła
+
+                        Sterowanie poruszaniem źródłami punktowymi
 F2 + KEY_LEFT
 F2 + KEY_RIGHT
 F3 + KEY_LEFT
@@ -17,10 +19,13 @@ F4 + KEY_LEFT
 F5 + KEY_LEFT
 F5 + KEY_LEFT
 
-W
-A                       Poruszanie kamery w przód
-S
-D
+W                       Poruszanie kamerą w przód
+A                       Poruszanie kamerą w lewo
+S                       Poruszanie kamerą w tył
+D                       Poruszanie kamerą w prawo
+T                       Przyczepić/odczepić kamerę do lokomotywy
+F                       Zmniejszyć zakres widoczności
+G                       Zwiększyć zakres widoczności
 
 B           
 C           
