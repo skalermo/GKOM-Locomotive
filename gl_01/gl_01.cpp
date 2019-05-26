@@ -102,7 +102,7 @@ int main()
 		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
 		auto cactus = Cactus(50);
-		auto floor = Cube(glm::vec3{ 0,-2, 0 }, glm::vec3{ 400,0,400 }, "textures/desert1.png");
+		auto floor = Cube(glm::vec3{ 0,-2, 0 }, glm::vec3{ 400,0.1,400 }, "textures/desert1.png");
 
 
 		glEnable(GL_DEPTH_TEST);

@@ -249,7 +249,7 @@ public:
 		shader->setInt("nr_point_lights", pointLights.size());
 		shader->setVec3f("viewPos", camera.Position);
 		shader->setVec3f("dirLight.direction", dirLight.getDirection());
-		shader->setVec3f("dirLight.ambient", dirLight.getAmbient() + 0.3f);
+		shader->setVec3f("dirLight.ambient", dirLight.getAmbient() + 0.15f );
 		shader->setVec3f("dirLight.diffuse", dirLight.getDiffuse());
 		shader->setVec3f("dirLight.specular", dirLight.getSpecular());
 
