@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\primitives">
+      <UniqueIdentifier>{c5258089-5957-4648-a928-112acc4046a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\opengl_objects">
+      <UniqueIdentifier>{a25fc3e0-bb5e-4399-aae3-6a21e0391b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\composites">
+      <UniqueIdentifier>{7e7494fa-0139-4764-8f9a-16ff69743383}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\models">
+      <UniqueIdentifier>{251b6ddf-8da3-49af-9c18-862717f39bd8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gl_01.cpp">
@@ -20,53 +32,68 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Composite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Cylinder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderProvider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Cube.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Sphere.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ThreeShapes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Text.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RailTrack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TrainBottom.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Primitive.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\primitives</Filter>
     </ClInclude>
     <ClInclude Include="Cone.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
+      <Filter>Header Files\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\opengl_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files\opengl_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderProvider.h">
+      <Filter>Header Files\opengl_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Header Files\opengl_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Header Files\opengl_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreeShapes.h">
+      <Filter>Header Files\composites</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainBottom.h">
+      <Filter>Header Files\composites</Filter>
     </ClInclude>
     <ClInclude Include="TrainTop.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\composites</Filter>
+    </ClInclude>
+    <ClInclude Include="RailTrack.h">
+      <Filter>Header Files\composites</Filter>
+    </ClInclude>
+    <ClInclude Include="Composite.h">
+      <Filter>Header Files\models</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Header Files\models</Filter>
+    </ClInclude>
+    <ClInclude Include="Primitive.h">
+      <Filter>Header Files\models</Filter>
+    </ClInclude>
+    <ClInclude Include="LightManager.h">
+      <Filter>Header Files\opengl_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="LightSrc.h">
+      <Filter>Header Files\opengl_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Cactus.h">
+      <Filter>Header Files\composites</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureProvider.h">
+      <Filter>Header Files\opengl_objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Train.h">
+      <Filter>Header Files\composites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

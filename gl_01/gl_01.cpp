@@ -101,10 +101,13 @@ int main()
 		auto train = Train();
 		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
-		auto cactus = Cactus(50); 
+		auto cactus = Cactus(50);
+		auto floor = Cube(glm::vec3{ 0,-2, 0 }, glm::vec3{ 400,0,400 }, "textures/desert1.png");
+
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
+		TextureProvider::instance().flushTextures();
 
 		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0;
 		int nbFrames = 0;
@@ -118,7 +121,7 @@ int main()
 			lastFrame = currentFrame;
 			nbFrames++;
 			if (slowTrainDown)
-			{	
+			{
 				speed -= speed < 0 ? -0.1f : 0.05f;
 				if (std::fabsf(speed) - 0.1f < 0)
 				{
@@ -157,6 +160,7 @@ int main()
 			train.draw();
 			railTrack.draw();
 			cactus.draw();
+			floor.draw();
 
 			skybox.draw(projection, view);
 
@@ -216,7 +220,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		lightManager.addNewPointLight();
 	if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
 		lightManager.popLastPointLight();
-	
+
 }
 
 void processInput(GLFWwindow *window)
@@ -261,7 +265,7 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 			lightManager.movePointLight(3, { deltaTime, 0.0f, 0.0f });
-	
+
 }
 
 

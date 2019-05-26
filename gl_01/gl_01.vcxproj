@@ -91,20 +91,25 @@
     <ClCompile Include="gl_01.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Cactus.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Composite.h" />
     <ClInclude Include="Cone.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="LightManager.h" />
+    <ClInclude Include="LightSrc.h" />
     <ClInclude Include="Primitive.h" />
     <ClInclude Include="RailTrack.h" />
     <ClInclude Include="Text.h" />
+    <ClInclude Include="TextureProvider.h" />
     <ClInclude Include="ThreeShapes.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProvider.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Train.h" />
     <ClInclude Include="TrainBottom.h" />
     <ClInclude Include="TrainTop.h" />
   </ItemGroup>
