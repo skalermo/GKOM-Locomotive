@@ -3,6 +3,7 @@
 #include <memory>
 #include "Shader.h"
 #include "SOIL.h"
+#include "TextureProvider.h"
 
 class Texture {
 	int width;
@@ -40,20 +41,21 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		const auto image = SOIL_load_image(texturePath.c_str(), &width, &height, nullptr, SOIL_LOAD_AUTO);
-		if (image == nullptr)
-			throw std::exception(std::string("Failed to load texture file " + texturePath).c_str());
+
+		unsigned char* image;
+		std::tie(image, width, height) = TextureProvider::instance().getTexture(texturePath);
+
 
 		glGenTextures(1, &texture);
 
 		setActiveTexture();
 		glBindTexture(GL_TEXTURE_2D, texture);
-		if(rgba)
+		if (rgba)
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-		else 
+		else
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
-		SOIL_free_image_data(image);
+		//SOIL_free_image_data(image);
 	}
 
 	GLuint getIndex() const {
