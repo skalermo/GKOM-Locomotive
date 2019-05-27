@@ -19,7 +19,7 @@
 #include "Cactus.h"
 #include "LightManager.h"
 #include "LightSrc.h"
-
+#include "Floor.h"
 
 
 using namespace std;
@@ -102,8 +102,7 @@ int main()
 		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
 		auto cactus = Cactus(50);
-		auto floor = Cube(glm::vec3{ 0,-2, 0 }, glm::vec3{ 400,0.1,400 }, "textures/desert1.png");
-
+		auto floor = Floor(600, 8);
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);

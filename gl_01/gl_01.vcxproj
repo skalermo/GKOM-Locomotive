@@ -97,6 +97,7 @@
     <ClInclude Include="Cone.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="Cylinder.h" />
+    <ClInclude Include="Floor.h" />
     <ClInclude Include="LightManager.h" />
     <ClInclude Include="LightSrc.h" />
     <ClInclude Include="Primitive.h" />

@@ -95,6 +95,9 @@
     <ClInclude Include="Train.h">
       <Filter>Header Files\composites</Filter>
     </ClInclude>
+    <ClInclude Include="Floor.h">
+      <Filter>Header Files\composites</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shCube.vert">
