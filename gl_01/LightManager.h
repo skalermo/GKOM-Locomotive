@@ -75,7 +75,8 @@ private:
 			const GLfloat& constant,
 			const GLfloat& linear,
 			const GLfloat& quadratic)
-			: ambient(ambient), 
+			: position(position),
+			ambient(ambient), 
 			diffuse(diffuse), 
 			specular(specular), 
 			constant(constant), 
@@ -117,6 +118,12 @@ private:
 		GLfloat getQuadratic()
 		{
 			return quadratic;
+		}
+
+		void move(const glm::vec3& displacement)
+		{
+			lightsrc->move(displacement);
+			position += displacement;
 		}
 
 		void setPosition(const glm::vec3& newPosition)
@@ -161,7 +168,7 @@ private:
 		}
 	};
 
-	class SpotLight {
+	/*class SpotLight {
 	private:
 		glm::vec3 position;
 		glm::vec3 direction;
@@ -306,12 +313,12 @@ private:
 			lightsrc->draw();
 		}
 
-	};
+	};*/
 
 	std::shared_ptr<Shader> shader;
 	std::unique_ptr<DirectionalLight> dirLight;
-	std::vector<std::unique_ptr<PointLight>> pointLights;
-	std::shared_ptr<SpotLight> spotLight;
+	std::shared_ptr<PointLight> pointLight;
+	//std::shared_ptr<SpotLight> spotLight;
 	
 	Camera camera;
 	
@@ -346,7 +353,46 @@ public:
 		dirLight->setSpecular(specular);
 	}
 
-	void addNewPointLight()
+	void movePointLight(glm::vec3 displacement)
+	{
+		if (!pointLight)
+			return;
+		pointLight->move(displacement);
+	}
+
+	std::shared_ptr<PointLight> getPointLight()
+	{
+		if (!pointLight)
+			return getPointLight({-3.0f, 2.0f, 2.0f},
+							glm::vec3(0.2f),
+							glm::vec3(1.0f),
+							glm::vec3(0.8f),
+							1.0f,
+							0.09f,
+							0.032f);
+		return pointLight;
+	}
+
+	std::shared_ptr<PointLight> getPointLight(const glm::vec3& position,
+											const glm::vec3& ambient,
+											const glm::vec3& diffuse,
+											const glm::vec3& specular,
+											const GLfloat& constant,
+											const GLfloat& linear,
+											const GLfloat& quadratic)
+	{
+		if (!pointLight)
+			pointLight = std::make_shared<PointLight>(PointLight(position,
+														ambient,
+														diffuse,
+														specular,
+														constant,
+														linear,
+														quadratic));
+		return pointLight;
+	}
+
+	/*void addNewPointLight()
 	{
 		addNewPointLight({ 0.0f, 0.0f, 0.0f },
 						{ 0.05f, 0.05f, 0.05f },
@@ -374,22 +420,22 @@ public:
 											linear,
 											quadratic)));
 
-	}
+	}*/
 
-	void popLastPointLight()
+	/*void popLastPointLight()
 	{
 		if (pointLights.size() > 0)
 			pointLights.pop_back();
-	}
+	}*/
 
-	void movePointLight(unsigned int index, glm::vec3 displacement)
+	/*void movePointLight(unsigned int index, glm::vec3 displacement)
 	{
 		if (index >= pointLights.size())
 			return;
 		pointLights[index]->setPosition(pointLights[index]->getPosition() + displacement);
-	}
+	}*/
 
-	void moveSpotLight(glm::vec3 displacement)
+	/*void moveSpotLight(glm::vec3 displacement)
 	{
 		if (!spotLight)
 			return;
@@ -408,9 +454,9 @@ public:
 							1.0f,
 							0.09f,
 							0.032f);
-	}
+	}*/
 
-	std::shared_ptr<SpotLight> getSpotLight(const glm::vec3& position,
+	/*std::shared_ptr<SpotLight> getSpotLight(const glm::vec3& position,
 											const glm::vec3& direction,
 											const GLfloat& cutOff,
 											const GLfloat& outerCutOff,
@@ -432,30 +478,40 @@ public:
 														linear,
 														quadratic));
 		return spotLight;
-	}
+	}*/
 
 
 	void applyLightToShader(std::shared_ptr<Shader> shader)
 	{
 		shader->use();
-		shader->setInt("nr_point_lights", pointLights.size());
+		//shader->setInt("nr_point_lights", pointLights.size());
 		shader->setVec3f("viewPos", camera.Position);
-		shader->setVec3f("dirLight.direction", dirLight.getDirection());
-		shader->setVec3f("dirLight.ambient", dirLight.getAmbient() + 0.15f );
-		shader->setVec3f("dirLight.diffuse", dirLight.getDiffuse());
-		shader->setVec3f("dirLight.specular", dirLight.getSpecular());
+		shader->setVec3f("dirLight.direction", dirLight->getDirection());
+		shader->setVec3f("dirLight.ambient", dirLight->getAmbient() + 0.15f );
+		shader->setVec3f("dirLight.diffuse", dirLight->getDiffuse());
+		shader->setVec3f("dirLight.specular", dirLight->getSpecular());
 
-		for (size_t i = 0; i < pointLights.size(); i++)
+		pointLight->drawLightSrc();
+		shader->use();
+		shader->setVec3f("pointLight.position", pointLight->getPosition());
+		shader->setVec3f("pointLight.ambient", pointLight->getAmbient());
+		shader->setVec3f("pointLight.diffuse", pointLight->getDiffuse());
+		shader->setVec3f("pointLight.specular", pointLight->getSpecular());
+		shader->setFloat("pointLight.constant", pointLight->getConstant());
+		shader->setFloat("pointLight.linear", pointLight->getLinear());
+		shader->setFloat("pointLight.quadratic", pointLight->getQuadratic());
+
+		/*for (size_t i = 0; i < pointLights.size(); i++)
 		{
 			pointLights[i]->drawLightSrc();
 			shader->use();
-			shader->setVec3f("pointLights[" + std::to_string(i) + "].position", pointLights[i]->getPosition());
-			shader->setVec3f("pointLights[" + std::to_string(i) + "].ambient", pointLights[i]->getAmbient());
-			shader->setVec3f("pointLights[" + std::to_string(i) + "].diffuse", pointLights[i]->getDiffuse());
-			shader->setVec3f("pointLights[" + std::to_string(i) + "].specular", pointLights[i]->getSpecular());
-			shader->setFloat("pointLights[" + std::to_string(i) + "].constant", pointLights[i]->getConstant());
-			shader->setFloat("pointLights[" + std::to_string(i) + "].linear", pointLights[i]->getLinear());
-			shader->setFloat("pointLights[" + std::to_string(i) + "].quadratic", pointLights[i]->getQuadratic());
+			shader->setVec3f("pointLight.position", pointLight->getPosition());
+			shader->setVec3f("pointLight.ambient", pointLight->getAmbient());
+			shader->setVec3f("pointLight.diffuse", pointLight->getDiffuse());
+			shader->setVec3f("pointLight.specular", pointLight->getSpecular());
+			shader->setFloat("pointLight.constant", pointLight->getConstant());
+			shader->setFloat("pointLight.linear", pointLight->getLinear());
+			shader->setFloat("pointLight.quadratic", pointLight->getQuadratic());
 		}
 
 		if (spotLight)
@@ -473,14 +529,14 @@ public:
 			shader->setVec3f("spotLight.diffuse", spotLight->getDiffuse());
 			shader->setVec3f("spotLight.specular", spotLight->getSpecular());
 
-		}
+		}*/
 
 	}
 
-	int getLightSrcsCount()
+	/*int getLightSrcsCount()
 	{
 		return pointLights.size();
-	}
+	}*/
 
 
 };
