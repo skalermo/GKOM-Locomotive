@@ -76,11 +76,8 @@ public:
 		: Primitive(coordinates, rotation, texturePath),
 	      radius(radius),  mLatitudes(widthSectors), mMeridians(heightSectors)
 	{
-//		shader = getShaderPtr();
 		init();
 	}
 
-	static std::shared_ptr<Shader> getShaderPtr() {
-		return ShaderProvider::instance().getShader("shSphere.vert", "shSphere.frag");
-	}
+	
 };

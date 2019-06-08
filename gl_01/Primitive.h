@@ -30,7 +30,6 @@ protected:
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
-	//std::shared_ptr<Shader> shader;
 	GLuint VAO, VBO, EBO;
 
 	Texture texture;

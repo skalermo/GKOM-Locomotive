@@ -8,7 +8,6 @@ class Cube : public Primitive
 {
 private:
 	GLuint texture0;
-	std::shared_ptr<Shader> shader;
 	const std::string texturePath;
 	Texture texture;
 
@@ -68,11 +67,6 @@ public:
 		glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f)) :
 		Primitive(coordinates, rotation, texturePath, size)
 	{
-		shader = getShaderPtr();
 		init();
-	}
-	static std::shared_ptr<Shader> getShaderPtr()
-	{
-		return ShaderProvider::instance().getShader("shCube.vert", "shCube.frag");
 	}
 };

@@ -92,9 +92,7 @@ int main()
 
 		auto shText = PrepareText(SCR_WIDTH, SCR_HEIGHT);
 
-		auto shCylinder = Cylinder::getShaderPtr();
-		auto shSphere = Sphere::getShaderPtr();
-		auto shCube = Cube::getShaderPtr();
+		auto shCube = ShaderProvider::instance().getShader("shCube.vert", "shCube.frag");
 		auto shLightSrc = LightSrc::getShaderPtr();
 		lightManager.setDirLight();
 		lightManager.getPointLight();

@@ -194,11 +194,8 @@ public:
 		radius(radius),
 		segments(segments)
 	{
-//		shader = getShaderPtr();
 		init();
 	}
 
-	static std::shared_ptr<Shader> getShaderPtr() {
-		return ShaderProvider::instance().getShader("shCylinder.vert", "shCylinder.frag");
-	}
+	
 };
