@@ -4,6 +4,8 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "LightSrc.h"
+#include "ShaderProvider.h"
+
 
 class LightManager {
 private:
@@ -315,7 +317,7 @@ private:
 
 	};*/
 
-	std::shared_ptr<Shader> shader;
+	std::shared_ptr<Shader> lightSrcShader;
 	std::unique_ptr<DirectionalLight> dirLight;
 	std::shared_ptr<PointLight> pointLight;
 	//std::shared_ptr<SpotLight> spotLight;
@@ -363,13 +365,14 @@ public:
 	std::shared_ptr<PointLight> getPointLight()
 	{
 		if (!pointLight)
-			return getPointLight({-3.0f, 2.0f, 2.0f},
-							glm::vec3(0.2f),
-							glm::vec3(1.0f),
-							glm::vec3(0.8f),
-							1.0f,
-							0.09f,
-							0.032f);
+			return getPointLight({ -3.0f, 2.0f, 2.0f },
+				glm::vec3(0.2f),
+				glm::vec3(1.0f),
+				glm::vec3(0.8f),
+				1.0f,
+				0.09f,
+				0.032f);
+
 		return pointLight;
 	}
 
@@ -382,13 +385,16 @@ public:
 											const GLfloat& quadratic)
 	{
 		if (!pointLight)
+		{
+			lightSrcShader = LightSrc::getShaderPtr();
 			pointLight = std::make_shared<PointLight>(PointLight(position,
-														ambient,
-														diffuse,
-														specular,
-														constant,
-														linear,
-														quadratic));
+				ambient,
+				diffuse,
+				specular,
+				constant,
+				linear,
+				quadratic));
+		}
 		return pointLight;
 	}
 
@@ -491,8 +497,6 @@ public:
 		shader->setVec3f("dirLight.diffuse", dirLight->getDiffuse());
 		shader->setVec3f("dirLight.specular", dirLight->getSpecular());
 
-		pointLight->drawLightSrc();
-		shader->use();
 		shader->setVec3f("pointLight.position", pointLight->getPosition());
 		shader->setVec3f("pointLight.ambient", pointLight->getAmbient());
 		shader->setVec3f("pointLight.diffuse", pointLight->getDiffuse());
@@ -500,6 +504,7 @@ public:
 		shader->setFloat("pointLight.constant", pointLight->getConstant());
 		shader->setFloat("pointLight.linear", pointLight->getLinear());
 		shader->setFloat("pointLight.quadratic", pointLight->getQuadratic());
+		pointLight->drawLightSrc(this->lightSrcShader);
 
 		/*for (size_t i = 0; i < pointLights.size(); i++)
 		{
