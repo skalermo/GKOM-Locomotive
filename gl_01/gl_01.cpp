@@ -97,8 +97,9 @@ int main()
 		auto shCube = Cube::getShaderPtr();
 		auto shLightSrc = LightSrc::getShaderPtr();
 		lightManager.setDirLight();
+		lightManager.getPointLight();
 
-		auto train = Train();
+		auto train = Train(lightManager);
 		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
 		auto cactus = Cactus(50);
@@ -215,10 +216,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		slowTrainDown = true;
-	if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
-		lightManager.addNewPointLight();
-	if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
-		lightManager.popLastPointLight();
+	//if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
+	//	lightManager.addNewPointLight();
+	//if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
+	//	lightManager.popLastPointLight();
 
 }
 
@@ -239,31 +240,31 @@ void processInput(GLFWwindow *window)
 
 	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(0, { -deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(0, { deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
 
 	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(1, { -deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(1, { deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
 
 	if (glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(2, { -deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(2, { deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
 
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(3, { -deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(3, { deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
 
 }
 

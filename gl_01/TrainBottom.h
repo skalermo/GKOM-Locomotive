@@ -43,10 +43,10 @@ private:
 	public:
 		Wheels()
 		{
-			auto wheelFrontLeft = std::make_unique<Cylinder>(glm::vec3(0.0f, 0.0f, -0.25f - 0.01f), 0.25f, 1.35f, wheelTexturePath);
-			auto wheelBackLeft = std::make_unique<Cylinder>(glm::vec3(6.0f, 0.0f, -0.25f - 0.01f), 0.25f, 1.35f, wheelTexturePath);
-			auto wheelFrontRight = std::make_unique<Cylinder>(glm::vec3(0.0f, 0.0f, 4.0f + 0.01f), 0.25f, 1.35f, wheelTexturePath);
-			auto wheelBackRight = std::make_unique<Cylinder>(glm::vec3(6.0f, 0.0f, 4.0f + 0.01f), 0.25f, 1.35f, wheelTexturePath);
+			auto wheelFrontLeft = std::make_unique<Cylinder>(glm::vec3(0.0f, 0.25f, -0.25f - 0.01f), 0.25f, 1.35f, wheelTexturePath);
+			auto wheelBackLeft = std::make_unique<Cylinder>(glm::vec3(6.0f, 0.25f, -0.25f - 0.01f), 0.25f, 1.35f, wheelTexturePath);
+			auto wheelFrontRight = std::make_unique<Cylinder>(glm::vec3(0.0f, 0.25f, 4.0f + 0.01f), 0.25f, 1.35f, wheelTexturePath);
+			auto wheelBackRight = std::make_unique<Cylinder>(glm::vec3(6.0f, 0.25f, 4.0f + 0.01f), 0.25f, 1.35f, wheelTexturePath);
 			addChild(std::move(wheelFrontLeft));
 			addChild(std::move(wheelFrontRight));
 			addChild(std::move(wheelBackLeft));
@@ -64,7 +64,7 @@ public:
 	{
 		auto wheels = std::make_unique<Wheels>();
 		auto rods = std::make_unique<Rods>();
-		auto bottom = std::make_unique<Cube>(glm::vec3(3.0f, 0.25f, 2.0f), glm::vec3(7.0f, 0.2, 2.0f), "textures/rivetedSteel.png");
+		auto bottom = std::make_unique<Cube>(glm::vec3(3.0f, 0.35f, 2.0f), glm::vec3(7.0f, 0.2, 2.0f), "textures/rivetedSteel.png");
 
 		wheelsPtr = wheels.get();
 		rodsPtr = rods.get();

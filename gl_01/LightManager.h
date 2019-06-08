@@ -327,6 +327,7 @@ public:
 	{
 		this->camera = camera;
 		dirLight = std::make_unique<DirectionalLight>(DirectionalLight());
+		//pointLight = std::make_unique<PointLight>(getPointLight());
 	}
 
 	/*void setShader(std::shared_ptr<Shader> shader)
@@ -363,7 +364,7 @@ public:
 	std::shared_ptr<PointLight> getPointLight()
 	{
 		if (!pointLight)
-			return getPointLight({-3.0f, 2.0f, 2.0f},
+			return getPointLight({-2.99f, 4.2f, 2.0f},
 							glm::vec3(0.2f),
 							glm::vec3(1.0f),
 							glm::vec3(0.8f),
