@@ -194,7 +194,7 @@ public:
 		radius(radius),
 		segments(segments)
 	{
-		shader = getShaderPtr();
+//		shader = getShaderPtr();
 		init();
 	}
 

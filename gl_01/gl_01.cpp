@@ -157,10 +157,10 @@ int main()
 
 			train.move({ deltaTime * speed, 0.0f, 0.0f });
 
-			train.draw();
-			railTrack.draw();
-			cactus.draw();
-			floor.draw();
+			train.draw(shCube);
+			railTrack.draw(shCube);
+			cactus.draw(shCube);
+			floor.draw(shCube);
 
 			skybox.draw(projection, view);
 

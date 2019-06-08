@@ -30,7 +30,7 @@ protected:
 
 	std::vector<GLfloat> vertices;
 	std::vector<GLuint> indices;
-	std::shared_ptr<Shader> shader;
+	//std::shared_ptr<Shader> shader;
 	GLuint VAO, VBO, EBO;
 
 	Texture texture;
@@ -69,7 +69,7 @@ protected:
 	*/
 	void init()
 	{
-		shader = ShaderProvider::instance().getShader("shCube.vert", "shCube.frag");
+		//shader = ShaderProvider::instance().getShader("shCube.vert", "shCube.frag");
 		generateVertices();
 		generateIndices();
 		setUpBuffers();
@@ -91,7 +91,7 @@ public:
 
 
 
-	void draw() override
+	void draw(std::shared_ptr<Shader> shader) override
 	{
 		glm::mat4 model = glm::mat4(1.0f);
 		model = translate(model, coordinates);

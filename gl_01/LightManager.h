@@ -162,9 +162,9 @@ private:
 			quadratic = newQuadratic;
 		}
 
-		void drawLightSrc()
+		void drawLightSrc(std::shared_ptr<Shader> shader)
 		{
-			lightsrc->draw();
+			lightsrc->draw(shader);
 		}
 	};
 
@@ -503,7 +503,7 @@ public:
 
 		/*for (size_t i = 0; i < pointLights.size(); i++)
 		{
-			pointLights[i]->drawLightSrc();
+			//pointLights[i]->drawLightSrc();
 			shader->use();
 			shader->setVec3f("pointLight.position", pointLight->getPosition());
 			shader->setVec3f("pointLight.ambient", pointLight->getAmbient());

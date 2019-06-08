@@ -76,7 +76,7 @@ public:
 		: Primitive(coordinates, rotation, texturePath),
 	      radius(radius),  mLatitudes(widthSectors), mMeridians(heightSectors)
 	{
-		shader = getShaderPtr();
+//		shader = getShaderPtr();
 		init();
 	}
 
