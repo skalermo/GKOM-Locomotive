@@ -96,7 +96,7 @@ public:
 		return ShaderProvider::instance().getShader("shLightSrc.vert", "shLightSrc.frag");
 	}
 
-	void draw() override {
+	void draw(std::shared_ptr<Shader> shader) override {
 		auto model = glm::mat4(1.0f);
 		model = translate(model, coordinates);
 		shader->use();
