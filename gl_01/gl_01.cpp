@@ -97,6 +97,7 @@ int main()
 		auto shCube = Cube::getShaderPtr();
 		auto shLightSrc = LightSrc::getShaderPtr();
 		lightManager.setDirLight();
+		lightManager.getPointLight();
 
 		auto train = Train();
 		auto railTrack = RailTrack(100);
@@ -215,10 +216,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		slowTrainDown = true;
-	if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
+	/*if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
 		lightManager.addNewPointLight();
 	if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
-		lightManager.popLastPointLight();
+		lightManager.popLastPointLight();*/
 
 }
 
@@ -237,7 +238,7 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		speed += 0.05f;
 
-	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+	/*if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 			lightManager.movePointLight(0, { -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
@@ -263,7 +264,7 @@ void processInput(GLFWwindow *window)
 			lightManager.movePointLight(3, { -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(3, { deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight(3, { deltaTime, 0.0f, 0.0f });*/
 
 }
 
