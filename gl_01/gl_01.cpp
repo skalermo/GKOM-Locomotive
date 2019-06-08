@@ -20,6 +20,7 @@
 #include "LightManager.h"
 #include "LightSrc.h"
 #include "Floor.h"
+#include "Shadows.h"
 
 
 using namespace std;
@@ -29,7 +30,7 @@ typedef std::vector<std::shared_ptr<Shader>>  ShaderVector;
 GLuint SCR_WIDTH;
 GLuint SCR_HEIGHT;
 
-void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const glm::mat4& view);
+void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& lightSpaceMatrix);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -51,6 +52,7 @@ float lastFrame = 0.0f;
 
 // locomotive speed
 float speed = 0.0f;
+float xx = 0.0f, yy = 0.0f;
 
 
 int main()
@@ -67,7 +69,7 @@ int main()
 	{
 		SCR_WIDTH = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 		SCR_HEIGHT = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
-		GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GKOM - OpenGL 01", glfwGetPrimaryMonitor(), nullptr);
+		GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GKOM - OpenGL 01", nullptr, nullptr);
 		if (window == nullptr)
 			throw exception("GLFW window not created");
 		glfwMakeContextCurrent(window);
@@ -91,16 +93,18 @@ int main()
 		glfwGetCursorPos(window, &lastX, &lastY);
 
 		auto shText = PrepareText(SCR_WIDTH, SCR_HEIGHT);
-
+		auto shShadow = PrepareShadows();
 		auto shCube = ShaderProvider::instance().getShader("shCube.vert", "shCube.frag");
+		shCube->use();
+		shCube->setInt("shadowMap", 1);
 		auto shLightSrc = LightSrc::getShaderPtr();
 		lightManager.setDirLight();
 		lightManager.getPointLight();
 
 		auto train = Train();
-		auto railTrack = RailTrack(100);
+		auto railTrack = RailTrack(30);
 		auto skybox = Skybox();
-		auto cactus = Cactus(50);
+		auto cactus = Cactus(20);
 		auto floor = Floor(600, 8);
 
 		glEnable(GL_DEPTH_TEST);
@@ -109,6 +113,10 @@ int main()
 
 		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0;
 		int nbFrames = 0;
+
+
+		glm::mat4 lightSpaceMatrix = calcLightSpaceMatrix();
+
 
 		// main loop
 		while (!glfwWindowShouldClose(window))
@@ -142,19 +150,33 @@ int main()
 			//glClear(GL_COLOR_BUFFER_BIT);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+			
+			shShadow->use();
+			shShadow->setTransformMatrix("lightSpaceMatrix", lightSpaceMatrix);
+
+			glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+			glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			
+			train.draw(shShadow);
+			railTrack.draw(shShadow);
+			cactus.draw(shShadow);
+			//floor.draw(shShadow);
+			
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+			// reset viewport
+			glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 			auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
 			auto view = camera.GetViewMatrix();
 
-			applyViewToShaders({ shCube, shLightSrc }, projection, view);
+			applyViewToShaders({ shCube }, projection, view, lightSpaceMatrix);
 			lightManager.applyLightToShader(shCube);
-
-			//threeShapes.move({ 0.001f, 0.0f, 0.0f });
-			//threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
-			//threeShapes.draw();
-
-
-			train.move({ deltaTime * speed, 0.0f, 0.0f });
-
+			
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, depthMap);
 			train.draw(shCube);
 			railTrack.draw(shCube);
 			cactus.draw(shCube);
@@ -171,9 +193,9 @@ int main()
 			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "Train speed: " + doubleToString(-speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
+			
 
-
-
+			train.move({ deltaTime * speed, 0.0f, 0.0f });
 			// Swap the screen buffers
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -188,13 +210,15 @@ int main()
 	return 0;
 }
 
-void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const glm::mat4& view)
+void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const glm::mat4& view, const glm::mat4& lightSpaceMatrix)
 {
 	for (const auto& shader : shaders)
 	{
 		shader->use();
 		shader->setTransformMatrix("projection", projection);
 		shader->setTransformMatrix("view", view);
+		shader->setTransformMatrix("lightSpaceMatrix", lightSpaceMatrix);
+
 	}
 }
 
@@ -236,13 +260,20 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		speed += 0.05f;
 
-	/*if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(0, { -deltaTime, 0.0f, 0.0f });
-	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(0, { deltaTime, 0.0f, 0.0f });
 
+		if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+				xx -= 5.f;
+		if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
+			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+				xx += 5.f;
+		if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
+			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+				yy -= 5.f;
+		if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
+			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+				yy += 5.f;
+	/*
 	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
 			lightManager.movePointLight(1, { -deltaTime, 0.0f, 0.0f });
