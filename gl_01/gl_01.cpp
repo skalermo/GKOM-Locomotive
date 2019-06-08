@@ -99,7 +99,7 @@ int main()
 		lightManager.setDirLight();
 		lightManager.getPointLight();
 
-		auto train = Train();
+		auto train = Train(lightManager);
 		auto railTrack = RailTrack(100);
 		auto skybox = Skybox();
 		auto cactus = Cactus(50);
@@ -240,31 +240,31 @@ void processInput(GLFWwindow *window)
 
 	/*if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(0, { -deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(0, { deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
 
 	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(1, { -deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(1, { deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
 
 	if (glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(2, { -deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(2, { deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
 
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight(3, { -deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight(3, { deltaTime, 0.0f, 0.0f });*/
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
 
 }
 
