@@ -129,15 +129,7 @@ int main()
 					slowTrainDown = false;
 				}
 			}
-			// input
-			// -----
-			processInput(window);
-			//inputTrainResize(window, train);
-
-			mouse_callback(window, lastX, lastY);
-			//scroll_callback(window, 3, 3);
-			// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
-
+			
 
 			// Clear the colorbuffer
 			glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
@@ -154,8 +146,6 @@ int main()
 			//threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
 			//threeShapes.draw();
 
-
-			train.move({ deltaTime * speed, 0.0f, 0.0f });
 
 			train.draw();
 			railTrack.draw();
@@ -174,7 +164,15 @@ int main()
 			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
 			RenderText(shText, "Train speed: " + doubleToString(-speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
 
+            // input
+			// -----
+			processInput(window);
+			//inputTrainResize(window, train);
 
+			mouse_callback(window, lastX, lastY);
+			//scroll_callback(window, 3, 3);
+			// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
+	        train.move({ deltaTime * speed, 0.0f, 0.0f });
 
 			// Swap the screen buffers
 			glfwSwapBuffers(window);
