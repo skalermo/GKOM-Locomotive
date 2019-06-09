@@ -25,3 +25,6 @@ Just open Visual Studio solution file (gkom-gl.sln) and run it in VS.
 ## Locomotive prototype photo
 
 ![Train](Train_photo_prototype_compressed.jpg)
+
+## Final result of the lomotive
+![Train_end](end_result.jpg)
