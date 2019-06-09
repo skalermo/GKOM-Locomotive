@@ -4,6 +4,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <iomanip>
 // GLEW
 #define GLEW_STATIC
 #include <GL/glew.h>
@@ -164,4 +165,18 @@ void RenderText(std::shared_ptr<Shader> shader, std::string text, GLfloat x, GLf
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+std::string doubleToString(double var)
+{
+	// Create an output string stream
+	std::ostringstream streamObj;
+	// Set Fixed -Point Notation
+	streamObj << std::fixed;
+	// Set precision to 2 digits
+	streamObj << std::setprecision(2);
+	//Add double to stream
+	streamObj << var;
+	return streamObj.str().c_str();
 }
