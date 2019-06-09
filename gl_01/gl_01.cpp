@@ -133,15 +133,8 @@ int main()
 				slowTrainDown = false;
 			}
 		}
-		// input
-		// -----
-		processInput(window);
-		//inputTrainResize(window, train);
-
-		mouse_callback(window, lastX, lastY);
-
-			
-		applyLightViewToShaders({ shShadow, shCube }, lightSpaceMatrix);
+		
+    	applyLightViewToShaders({ shShadow, shCube }, lightSpaceMatrix);
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -174,7 +167,11 @@ int main()
 		RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
 		RenderText(shText, "Train speed: " + doubleToString(-speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
 			
-
+        // input
+		// -----
+		processInput(window);
+		inputTrainResize(window, train);
+		mouse_callback(window, lastX, lastY);
 		train.move({ deltaTime * speed, 0.0f, 0.0f });
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
@@ -239,7 +236,6 @@ void processInput(GLFWwindow *window)
 		speed -= 0.05;
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		speed += 0.05f;
-
 }
 
 
@@ -286,4 +282,3 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(yoffset);
 }
-

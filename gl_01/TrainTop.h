@@ -28,20 +28,21 @@ class TrainTop : public Composite
 		bodyCords.z
 	);
 
+	float coneHeight = 1.15f, radiusCone = 0.66f;
+	glm::vec3 coneCords = glm::vec3(
+		bodyCords.x + radiusCone + 1.3,
+		cabinCords.y + coneHeight - cabinHeight - 0.3,
+		bodyCords.z
+	);
+
 	void createChimney()
 	{
-		auto coneHeight = 1.15f, radiusCone = 0.66f;
-		auto coneCords = glm::vec3(
-			bodyCords.x + radiusCone + 0.3,
-			cabinCords.y + coneHeight - cabinHeight - 0.3,
-			bodyCords.z
-		);
 		auto cone = std::make_unique<Cone>(
 			coneCords,
 			coneHeight,
 			radiusCone,
 			"textures/black-steel.png"
-		);
+			);
 
 		cone->rotate({ 90.f, 0.f, 0.0 });
 
@@ -49,13 +50,13 @@ class TrainTop : public Composite
 
 		auto chimneyHeight = 1.15f, radiusChimney = 0.66f;
 		auto chimneyCords = glm::vec3(
-			bodyCords.x + radiusChimney + 0.3,
+			coneCords.x,
 			coneCords.y,
 			bodyCords.z
 		);
 		auto chimney = std::make_unique<Cylinder>(chimneyCords,
 			chimneyHeight, radiusChimney, bodyPath
-		);
+			);
 
 		chimney->rotate({ 270.f, 0.f, 0.0 });
 
@@ -68,15 +69,32 @@ class TrainTop : public Composite
 	{
 		auto body = std::make_unique<Cylinder>(
 			bodyCords,
-			bodyWidth, 
-			bodyRadius, 
-			18, 
+			bodyWidth,
+			bodyRadius,
+			18,
 			glm::vec3(90.f, 90.f, 0.f),
 			bodyPath
-		);
+			);
 
 		bodyPtr = body.get();
 		addChild(std::move(body));
+
+
+		auto lightBox = std::make_unique<Cube>(
+			coneCords + glm::vec3(-1.2f, 0.f, 0.f),
+			glm::vec3(0.2f, coneHeight /2, coneHeight /2),
+			cabinPath
+			);
+
+		auto lightCone = std::make_unique<Cone>(
+			bodyCords + glm::vec3(0.5f, 0.08f + bodyRadius + coneHeight / 2, 0.f),
+			0.4f,
+			0.5f,
+			"textures/black-steel.png"
+			);
+		lightCone->rotate({ 0.0f, 90.f, 0.f });
+		addChild(std::move(lightCone));
+		addChild(std::move(lightBox));
 
 		createChimney();
 	}
@@ -88,14 +106,14 @@ class TrainTop : public Composite
 			cabinCords,
 			glm::vec3(-cabinLength, cabinHeight, cabinWidth),
 			cabinPath
-		);
+			);
 
 		cabinPtr = cabin.get();
 		addChild(std::move(cabin));
 
 		auto windowsCords = glm::vec3(
 			cabinCords.x - cabinLength - 0.001f,
-			cabinCords.y, 
+			cabinCords.y,
 			cabinCords.z
 		);
 		auto windows = std::make_unique<Cube>(
@@ -103,7 +121,7 @@ class TrainTop : public Composite
 			glm::vec3(0.0001, cabinHeight, cabinWidth),
 			"textures/black-steel-windows.png",
 			glm::vec3(-90.f, 0.f, 0.f)
-		);
+			);
 
 		addChild(std::move(windows));
 
@@ -114,7 +132,7 @@ class TrainTop : public Composite
 			roofCords,
 			glm::vec3(-roofLength, roofHeight, roofWidth),
 			cabinPath
-		);
+			);
 
 		roofPtr = roof.get();
 		addChild(std::move(roof));
