@@ -37,11 +37,19 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void processInput(GLFWwindow *window);
 void inputTrainResize(GLFWwindow*, Train&);
+void cameraAttachedMode();
+void decreaseLightIntensity();
+void increaseLightIntensity();
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 LightManager lightManager(camera);
 
 // global variables declaration
+bool isCameraAttached = false;
+float lightIntensity = 0.0f;
+glm::vec3 lightAmbient = glm::vec3(0.5f);
+glm::vec3 lightDiffuse = glm::vec3(1.0f);
+glm::vec3 lightSpecular = glm::vec3(1.0f);
 double lastX;
 double lastY;
 bool firstMouse = true;
@@ -91,8 +99,16 @@ int main()
 	shCube->use();
 	shCube->setInt("shadowMap", 1);
 	auto shLightSrc = LightSrc::getShaderPtr();
+	shLightSrc->use();
+	shLightSrc->setFloat("lightIntesity", lightIntensity);
 	lightManager.setDirLight();
-	lightManager.getPointLight();
+	lightManager.getPointLight({ -3.0f, 4.2f, 2.0f },
+								lightAmbient * lightIntensity,
+								lightDiffuse * lightIntensity,
+								lightSpecular * lightIntensity,
+								1.0f,
+								0.03f,
+								0.01f);
 
 	// objects construction
 	auto train = Train(lightManager);
@@ -148,7 +164,6 @@ int main()
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 		auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
 		auto view = camera.GetViewMatrix();
 		applyViewToShaders({ shCube, shLightSrc }, projection, view);
@@ -172,6 +187,7 @@ int main()
 		processInput(window);
 		inputTrainResize(window, train);
 		mouse_callback(window, lastX, lastY);
+		cameraAttachedMode();
 		train.move({ deltaTime * speed, 0.0f, 0.0f });
 		// Swap the screen buffers
 		glfwSwapBuffers(window);
@@ -181,6 +197,40 @@ int main()
 	glfwTerminate();
 
 	return 0;
+}
+
+void cameraAttachedMode()
+{
+	if (!isCameraAttached)
+		return;
+	camera.Position.x += deltaTime * speed;
+}
+
+void decreaseLightIntensity()
+{
+	if ((lightIntensity -= 0.01f) <= 0.0f)
+		lightIntensity = 0.0f;
+	
+	std::shared_ptr<Shader> shader = ShaderProvider::instance().getShader("shLightSrc.vert", "shLightSrc.frag");
+	shader->use();
+	shader->setFloat("lightIntensity", lightIntensity);
+	lightManager.getPointLight()->setAmbient(lightAmbient * lightIntensity);
+	lightManager.getPointLight()->setDiffuse(lightDiffuse * lightIntensity);
+	lightManager.getPointLight()->setSpecular(lightSpecular * lightIntensity);
+
+}
+
+void increaseLightIntensity()
+{
+	if ((lightIntensity += 0.01f) >= 1.0f)
+		lightIntensity = 1.0f;
+
+	std::shared_ptr<Shader> shader = ShaderProvider::instance().getShader("shLightSrc.vert", "shLightSrc.frag");
+	shader->use();
+	shader->setFloat("lightIntensity", lightIntensity);
+	lightManager.getPointLight()->setAmbient(lightAmbient * lightIntensity);
+	lightManager.getPointLight()->setDiffuse(lightDiffuse * lightIntensity);
+	lightManager.getPointLight()->setSpecular(lightSpecular * lightIntensity);
 }
 
 void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const glm::mat4& view)
@@ -219,6 +269,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		slowTrainDown = true;
 
+	if (key == GLFW_KEY_T && action == GLFW_PRESS)
+		isCameraAttached = !isCameraAttached;
+
 }
 
 // sticky key input
@@ -236,6 +289,11 @@ void processInput(GLFWwindow *window)
 		speed -= 0.05;
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		speed += 0.05f;
+	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+		increaseLightIntensity();
+	if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+		decreaseLightIntensity();
+
 }
 
 
