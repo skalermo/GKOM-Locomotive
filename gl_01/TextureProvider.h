@@ -30,6 +30,11 @@ public:
 
 	void flushTextures()
 	{
+		for(auto& texture : textures)
+		{
+			const auto texturePointer = std::get<0>(texture.second);
+			SOIL_free_image_data(texturePointer);
+		}
 		textures.clear();
 	}
 };
