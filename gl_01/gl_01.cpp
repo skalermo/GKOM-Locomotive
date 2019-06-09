@@ -211,12 +211,7 @@ void decreaseLightIntensity()
 	if ((lightIntensity -= 0.01f) <= 0.0f)
 		lightIntensity = 0.0f;
 	
-	std::shared_ptr<Shader> shader = ShaderProvider::instance().getShader("shLightSrc.vert", "shLightSrc.frag");
-	shader->use();
-	shader->setFloat("lightIntensity", lightIntensity);
-	lightManager.getPointLight()->setAmbient(lightAmbient * lightIntensity);
-	lightManager.getPointLight()->setDiffuse(lightDiffuse * lightIntensity);
-	lightManager.getPointLight()->setSpecular(lightSpecular * lightIntensity);
+	changeLightIntensity();
 
 }
 
@@ -225,12 +220,17 @@ void increaseLightIntensity()
 	if ((lightIntensity += 0.01f) >= 1.0f)
 		lightIntensity = 1.0f;
 
-	std::shared_ptr<Shader> shader = ShaderProvider::instance().getShader("shLightSrc.vert", "shLightSrc.frag");
-	shader->use();
-	shader->setFloat("lightIntensity", lightIntensity);
-	lightManager.getPointLight()->setAmbient(lightAmbient * lightIntensity);
-	lightManager.getPointLight()->setDiffuse(lightDiffuse * lightIntensity);
-	lightManager.getPointLight()->setSpecular(lightSpecular * lightIntensity);
+	changeLightIntensity();
+}
+
+void changeLightIntensity() 
+{
+    std::shared_ptr<Shader> shader = ShaderProvider::instance().getShader("shLightSrc.vert", "shLightSrc.frag");
+    shader->use();
+    shader->setFloat("lightIntensity", lightIntensity);
+    lightManager.getPointLight()->setAmbient(lightAmbient * lightIntensity);
+    lightManager.getPointLight()->setDiffuse(lightDiffuse * lightIntensity);
+    lightManager.getPointLight()->setSpecular(lightSpecular * lightIntensity);
 }
 
 void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const glm::mat4& view)
