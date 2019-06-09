@@ -1,9 +1,8 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <cmath>
-#include <iomanip>
+
 
 #include "Camera.h"
 #include "Cylinder.h"
@@ -20,6 +19,7 @@
 #include "LightManager.h"
 #include "LightSrc.h"
 #include "Floor.h"
+#include "Shadows.h"
 
 
 using namespace std;
@@ -30,25 +30,24 @@ GLuint SCR_WIDTH;
 GLuint SCR_HEIGHT;
 
 void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const glm::mat4& view);
+void applyLightViewToShaders(ShaderVector shaders, const glm::mat4& lightSpaceMatrix);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void processInput(GLFWwindow *window);
 void inputTrainResize(GLFWwindow*, Train&);
-string doubleToString(double);
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 LightManager lightManager(camera);
+
+// global variables declaration
 double lastX;
 double lastY;
 bool firstMouse = true;
 bool slowTrainDown = false;
-
-
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-
 // locomotive speed
 float speed = 0.0f;
 
@@ -63,126 +62,122 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	try
+	
+	SCR_WIDTH = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
+	SCR_HEIGHT = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GKOM - OpenGL 01", glfwGetPrimaryMonitor(), nullptr);
+	if (window == nullptr)
+		throw exception("GLFW window not created");
+	glfwMakeContextCurrent(window);
+	glfwSetKeyCallback(window, key_callback);
+
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK)
+		throw exception("GLEW Initialization failed");
+	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+	// tell GLFW to capture our mouse
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwGetCursorPos(window, &lastX, &lastY);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	// shaders and lights configuration
+	auto shText = PrepareText(SCR_WIDTH, SCR_HEIGHT);
+	auto shShadow = PrepareShadows();
+	auto shCube = ShaderProvider::instance().getShader("shCube.vert", "shCube.frag");
+	shCube->use();
+	shCube->setInt("shadowMap", 1);
+	auto shLightSrc = LightSrc::getShaderPtr();
+	lightManager.setDirLight();
+	lightManager.getPointLight();
+
+	// objects construction
+	auto train = Train();
+	auto railTrack = RailTrack(30);
+	auto skybox = Skybox();
+	auto cactus = Cactus(20);
+	auto floor = Floor(600, 8);
+
+	TextureProvider::instance().flushTextures();
+
+	// local variables declaration
+	double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0;
+	int nbFrames = 0;
+	glm::mat4 lightSpaceMatrix = calcLightSpaceMatrix();
+
+
+
+
+	// main loop
+	while (!glfwWindowShouldClose(window))
 	{
-		SCR_WIDTH = glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
-		SCR_HEIGHT = glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
-		GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GKOM - OpenGL 01", glfwGetPrimaryMonitor(), nullptr);
-		if (window == nullptr)
-			throw exception("GLFW window not created");
-		glfwMakeContextCurrent(window);
-		glfwSetKeyCallback(window, key_callback);
-
-		glewExperimental = GL_TRUE;
-		if (glewInit() != GLEW_OK)
-			throw exception("GLEW Initialization failed");
-
-		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-		// Set OpenGL options
-		//glEnable(GL_CULL_FACE);
-
-		glfwMakeContextCurrent(window);
-		glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-		glfwSetCursorPosCallback(window, mouse_callback);
-		glfwSetScrollCallback(window, scroll_callback);
-
-		// tell GLFW to capture our mouse
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		glfwGetCursorPos(window, &lastX, &lastY);
-
-		auto shText = PrepareText(SCR_WIDTH, SCR_HEIGHT);
-
-		auto shCylinder = Cylinder::getShaderPtr();
-		auto shSphere = Sphere::getShaderPtr();
-		auto shCube = Cube::getShaderPtr();
-		auto shLightSrc = LightSrc::getShaderPtr();
-		lightManager.setDirLight();
-		lightManager.getPointLight();
-
-		auto train = Train(lightManager);
-		auto railTrack = RailTrack(100);
-		auto skybox = Skybox();
-		auto cactus = Cactus(50);
-		auto floor = Floor(600, 8);
-
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-		TextureProvider::instance().flushTextures();
-
-		double lastTime = lastFrame = glfwGetTime(), deltaT = 0.0, spf = 0.0;
-		int nbFrames = 0;
-
-		// main loop
-		while (!glfwWindowShouldClose(window))
-		{
-			float currentFrame = glfwGetTime();
-			deltaTime = currentFrame - lastFrame;
-			deltaT = currentFrame - lastTime;
-			lastFrame = currentFrame;
-			nbFrames++;
-			if (slowTrainDown)
-			{
-				speed -= speed < 0 ? -0.1f : 0.05f;
-				if (std::fabsf(speed) - 0.1f < 0)
-				{
-					speed = 0;
-					slowTrainDown = false;
-				}
-			}
-			
-
-			// Clear the colorbuffer
-			glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
-			//glClear(GL_COLOR_BUFFER_BIT);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-			auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
-			auto view = camera.GetViewMatrix();
-
-			applyViewToShaders({ shCube, shLightSrc }, projection, view);
-			lightManager.applyLightToShader(shCube);
-
-			//threeShapes.move({ 0.001f, 0.0f, 0.0f });
-			//threeShapes.rotate({ 0.0f, 0.1f, 0.0f });
-			//threeShapes.draw();
-
-
-			train.draw();
-			railTrack.draw();
-			cactus.draw();
-			floor.draw();
-
-			skybox.draw(projection, view);
-
-			if (deltaT >= 0.25) {
-				spf = 250 / (double)nbFrames;
-				nbFrames = 0;
-				lastTime += 0.25f;
-			}
-			RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
-			RenderText(shText, "Train speed: " + doubleToString(-speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
-
-            // input
-			// -----
-			processInput(window);
-			//inputTrainResize(window, train);
-
-			mouse_callback(window, lastX, lastY);
-			//scroll_callback(window, 3, 3);
-			// Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
-	        train.move({ deltaTime * speed, 0.0f, 0.0f });
-
-			// Swap the screen buffers
-			glfwSwapBuffers(window);
-			glfwPollEvents();
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		deltaT = currentFrame - lastTime;
+		lastFrame = currentFrame;
+		nbFrames++;
+		if (deltaT >= 0.25) {
+			spf = 250 / (double)nbFrames;
+			nbFrames = 0;
+			lastTime += 0.25f;
 		}
+		if (slowTrainDown)
+		{
+			speed -= speed < 0 ? -0.1f : 0.05f;
+			if (std::fabsf(speed) - 0.1f < 0)
+			{
+				speed = 0;
+				slowTrainDown = false;
+			}
+		}
+		
+    	applyLightViewToShaders({ shShadow, shCube }, lightSpaceMatrix);
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		train.draw(shShadow);
+		railTrack.draw(shShadow);
+		cactus.draw(shShadow);
+		//floor.draw(shShadow);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		// reset viewport
+		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		auto projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 400.0f);
+		auto view = camera.GetViewMatrix();
+		applyViewToShaders({ shCube, shLightSrc }, projection, view);
+		lightManager.applyLightToShader(shCube);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		train.draw(shCube);
+		railTrack.draw(shCube);
+		cactus.draw(shCube);
+		floor.draw(shCube);
+
+		skybox.draw(projection, view);
+
+		RenderText(shText, "frame: " + doubleToString(spf) + "ms", 25.0f, SCR_HEIGHT - 20.0f, 0.4f, glm::vec3(1.0f));
+		RenderText(shText, "FPS: " + std::to_string((int)(1000 / spf)), 25.0f, SCR_HEIGHT - 50.0f, 0.4f, glm::vec3(1.0f));
+		RenderText(shText, "X=" + doubleToString(camera.Position.x) + "; Y=" + doubleToString(camera.Position.y) + "; Z=" + doubleToString(camera.Position.z), 25.0f, SCR_HEIGHT - 80.0f, 0.4f, glm::vec3(1.0f));
+		RenderText(shText, "Train speed: " + doubleToString(-speed), 25.0f, SCR_HEIGHT - 110.0f, 0.4f, glm::vec3(1.0f));
+			
+        // input
+		// -----
+		processInput(window);
+		inputTrainResize(window, train);
+		mouse_callback(window, lastX, lastY);
+		train.move({ deltaTime * speed, 0.0f, 0.0f });
+		// Swap the screen buffers
+		glfwSwapBuffers(window);
+		glfwPollEvents();
 	}
-	catch (exception ex)
-	{
-		cout << ex.what() << endl;
-	}
+	
 	glfwTerminate();
 
 	return 0;
@@ -195,6 +190,15 @@ void applyViewToShaders(ShaderVector shaders, const glm::mat4& projection, const
 		shader->use();
 		shader->setTransformMatrix("projection", projection);
 		shader->setTransformMatrix("view", view);
+	}
+}
+
+void applyLightViewToShaders(ShaderVector shaders, const glm::mat4& lightSpaceMatrix)
+{
+	for (const auto& shader : shaders)
+	{
+		shader->use();
+		shader->setTransformMatrix("lightSpaceMatrix", lightSpaceMatrix);
 	}
 }
 
@@ -214,13 +218,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 		slowTrainDown = true;
-	/*if (key == GLFW_KEY_EQUAL && action == GLFW_PRESS)
-		lightManager.addNewPointLight();
-	if (key == GLFW_KEY_MINUS && action == GLFW_PRESS)
-		lightManager.popLastPointLight();*/
 
 }
 
+// sticky key input
 void processInput(GLFWwindow *window)
 {
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -235,35 +236,6 @@ void processInput(GLFWwindow *window)
 		speed -= 0.05;
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		speed += 0.05f;
-
-	/*if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
-	if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
-
-	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
-	if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
-
-	if (glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
-	if (glfwGetKey(window, GLFW_KEY_F4) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
-
-	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
-	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });*/
-
 }
 
 
@@ -309,17 +281,4 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(yoffset);
-}
-
-string doubleToString(double var)
-{
-	// Create an output string stream
-	std::ostringstream streamObj;
-	// Set Fixed -Point Notation
-	streamObj << std::fixed;
-	// Set precision to 2 digits
-	streamObj << std::setprecision(2);
-	//Add double to stream
-	streamObj << var;
-	return streamObj.str().c_str();
 }

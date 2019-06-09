@@ -9,7 +9,7 @@ public:
 	This method should all the things to display the object to the screen
 	e.g. biding Array Objects, using glDraw... and unbinding the arrays
 	*/
-	virtual void draw() = 0;
+	virtual void draw(std::shared_ptr<Shader>) = 0;
 
 	/*
 	Move should only update the state of the vertecies accorging to the 3d

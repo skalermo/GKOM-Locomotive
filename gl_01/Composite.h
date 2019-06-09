@@ -19,10 +19,10 @@
 */
 class Composite : public Object {
 public:
-	void draw() override
+	void draw(std::shared_ptr<Shader> shader) override
 	{
 		for (auto& child : children)
-			child->draw();
+			child->draw(shader);
 	}
 
 	void move(glm::vec3 displacement) override
