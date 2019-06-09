@@ -40,6 +40,7 @@ void inputTrainResize(GLFWwindow*, Train&);
 void cameraAttachedMode();
 void decreaseLightIntensity();
 void increaseLightIntensity();
+void changeLightIntensity();
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 LightManager lightManager(camera);
