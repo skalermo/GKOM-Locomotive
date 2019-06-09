@@ -212,7 +212,7 @@ public:
 	std::shared_ptr<PointLight> getPointLight()
 	{
 		if (!pointLight)
-			return getPointLight({ -3.0f, 2.0f, 2.0f },
+			return getPointLight({ -3.0f, 4.2f, 2.0f },
 				glm::vec3(0.2f),
 				glm::vec3(1.0f),
 				glm::vec3(0.8f),

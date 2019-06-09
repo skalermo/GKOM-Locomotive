@@ -95,7 +95,7 @@ int main()
 	lightManager.getPointLight();
 
 	// objects construction
-	auto train = Train();
+	auto train = Train(lightManager);
 	auto railTrack = RailTrack(30);
 	auto skybox = Skybox();
 	auto cactus = Cactus(20);
