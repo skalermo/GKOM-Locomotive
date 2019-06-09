@@ -10,7 +10,7 @@
 class Cactus : public Composite
 {
 private:
-	float groundLevel= -1.55f;;
+	float groundLevel= -2.11f;
 public:
 	void createBranch(float rotation, glm::vec3 coords, float height, float radius)
 	{

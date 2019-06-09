@@ -262,7 +262,7 @@ void processInput(GLFWwindow *window)
 			lightManager.movePointLight({ -deltaTime, 0.0f, 0.0f });
 	if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });
+			lightManager.movePointLight({ deltaTime, 0.0f, 0.0f });*/
 
 }
 
