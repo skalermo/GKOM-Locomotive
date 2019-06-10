@@ -10,6 +10,23 @@ Rafał Lewanczyk
 
 Roman Moskalenko - [skalermo](https://github.com/skalermo)
 
+## Podział pracy
+
+Roman Moskalenko:
+
+Objekt "Cylinder", oświetlenie, cienie, cieniowanie, dół lokomotywy
+
+
+Jarek Glegoła:
+
+Obiekt Sphere, Cone, ShaderProvider, TextureProvider, reszta lokomotywy
+
+
+Rafał Lewanczyk:
+
+Obiekt Cube, tory kolejowe, kaktusy, Texture.h
+
+
 ## Download
 
 Use git clone to clone the repo.
