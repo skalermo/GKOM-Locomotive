@@ -6,7 +6,7 @@ Simple model of locomotive with surroundings and lights implemented in C++ with 
 
 Jarosław Glegoła - [KostkaBrukowa](https://github.com/KostkaBrukowa)
 
-Rafał Lewanczyk
+Rafał Lewanczyk - [rafallewanczyk](https://github.com/rafallewanczyk)
 
 Roman Moskalenko - [skalermo](https://github.com/skalermo)
 
